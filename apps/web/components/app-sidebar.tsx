@@ -1,37 +1,31 @@
 "use client"
 
-import * as React from "react"
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
-import MainNav from "./main-nav"
 import {
   Sidebar,
   SidebarContent,
   SidebarRail,
 } from "@workspace/ui/components/sidebar"
+import {
+  BookOpen,
+  Bot,
+  Settings2,
+  SquareTerminal,
+} from "lucide-react"
+import * as React from "react"
+import MainNav from "./main-nav"
 
 // This is sample data.
 const data = {
   navMain: [
     {
-      title: "Javascript",
+      title: "Utilities",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Charts",
+          url: "charts",
         },
         {
           title: "Starred",
