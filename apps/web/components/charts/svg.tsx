@@ -10,10 +10,12 @@ import useChartDisplay from "./use-chart-display"
 
 export type SVGProps = {
   children: ReactNode
+  height?: number | string
   ref: RefObject<SVGSVGElement | null>
+  width?: number | string
 }
 
-export default function SVG({ children, ref }: SVGProps) {
+export default function SVG({ children, height = "100%", ref, width = "100%" }: SVGProps) {
   const { resizeChart, setMouseCoords } = useChartDisplay()
 
   const mouseMoveHandler = useCallback(
@@ -71,13 +73,13 @@ export default function SVG({ children, ref }: SVGProps) {
 
   return (
     <svg
-      className="bg-blue-950 h-full w-full touch-none"
-      height="100%"
+      className="bg-blue-950 touch-none"
+      height={height}
       onMouseMove={mouseMoveHandler}
       onTouchMove={touchMoveHandler}
       // onWheel={wheelHandler}
       ref={ref}
-      width="100%"
+      width={width}
     >
       {children}
     </svg>

@@ -7,16 +7,20 @@ import DisplayProvider from "./display-provider"
 import { Candle } from "@/types"
 
 export type ChartProps = {
-  data: Candle[]
   children: ReactNode
+  data: Candle[]
+  height: number | string
+  width: number | string
 }
 
-export default function Chart({ children, data }: ChartProps) {
+export default function Chart({ children, data, height, width }: ChartProps) {
   const ref = useRef<SVGSVGElement | null>(null)
   return (
     <DataProvider data={data}>
       <DisplayProvider ref={ref}>
-        <SVG ref={ref}>{children}</SVG>
+        <SVG ref={ref} height={height} width={width}>
+          {children}
+        </SVG>
       </DisplayProvider>
     </DataProvider>
   )

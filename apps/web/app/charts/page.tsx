@@ -26,8 +26,8 @@ const extractor = (candle: Array<number | undefined>) => {
 
 export default async function Page() {
   return (
-    <div className="flex min-h-svh p-6">
-      <Chart data={data.map(extractor)}>
+    <div className="flex flex-col h-full p-6">
+      <Chart data={data.map(extractor)} height="600" width="100%">
         <Grid />
         <Graph />
       </Chart>
