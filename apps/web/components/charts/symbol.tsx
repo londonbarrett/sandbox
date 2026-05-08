@@ -1,7 +1,7 @@
-import { useAppSelector } from "@common/store/hooks"
-import { getValueAxisWidth } from "@common/store/selectors/chart-display"
-import { getIntervalName } from "@common/util/format"
+"use client"
+
 import { memo } from "react"
+import useChartDisplay from "./use-chart-display"
 
 export type SymbolProps = {
   symbol: string
@@ -9,7 +9,7 @@ export type SymbolProps = {
 }
 
 const Symbol = memo(({ symbol, interval }: SymbolProps) => {
-  const valueAxisWidth = useAppSelector(getValueAxisWidth)
+  const {dimensions: {valueAxisWidth}} = useChartDisplay()
 
   return (
     <text
@@ -20,7 +20,7 @@ const Symbol = memo(({ symbol, interval }: SymbolProps) => {
       textAnchor="middle"
       dominantBaseline="middle"
     >
-      {`${symbol} - ${getIntervalName(interval)}`}
+      {`${symbol} - ${interval}`}
     </text>
   )
 })
