@@ -1,12 +1,13 @@
-import * as d3 from "d3"
-import { memo, use, useMemo } from "react"
-import { ChartContext } from "@common/hooks/use-chart"
+"use client"
 
-export const Grid = memo(() => {
-  const height = useAppSelector((state) => getHeight(state))
-  const maxValue = useAppSelector((state) => getMaxValue(state))
-  const minValue = useAppSelector((state) => getMinValue(state))
-  const graphWidth = useAppSelector(getGraphWidth)
+import * as d3 from "d3"
+import { useMemo } from "react"
+import useChartData from "./use-chart-data"
+import useChartDisplay from "./use-chart-display"
+
+export default function Grid() {
+  const { dimensions: { graphWidth, height } } = useChartDisplay()
+  const { maxValue, minValue } = useChartData()
   const lines = useMemo(() => {
     const scale = d3
       .scaleLinear()
@@ -34,6 +35,4 @@ export const Grid = memo(() => {
       ))}
     </g>
   )
-})
-
-Grid.displayName = "game.components.grid"
+}

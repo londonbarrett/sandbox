@@ -1,4 +1,4 @@
-import useChart from "./use-chart-display"
+import useChartDisplay from "./use-chart-display"
 import { Candle as CandleType } from "@/types"
 import clsx from "clsx"
 import { memo } from "react"
@@ -11,7 +11,7 @@ export type CandleProps = {
 
 const Candle = memo(
   ({ data, width, x }: CandleProps) => {
-    const { getAbsYCoord } = useChart()
+    const { getAbsYCoord } = useChartDisplay()
     const up = data.close > data.open
     const barTop = getAbsYCoord(up ? data.close : data.open)
     const barBottom = getAbsYCoord(up ? data.open : data.close)

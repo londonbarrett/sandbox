@@ -1,17 +1,19 @@
-import { DataContext } from "./data-provider"
+"use client"
+
+import { Dimensions } from "@/types"
 import { DisplayContext } from "./display-provider"
 import { use, useCallback } from "react"
+import useChartData from "./use-chart-data"
 
 export default function useChartDisplay() {
-  const { state: data } = use(DataContext)
+  const { data, maxValue, minValue } = useChartData()
   const { dispatch, ref, state: dimensions } = use(DisplayContext)
-  const { columnWidth, height } = dimensions
-  const { maxValue, minValue } = data
+  const { height } = dimensions
 
   const getCandleAt = useCallback(
     (x: number) => {
       const i = Math.floor(x / dimensions.columnWidth)
-      return data.data[i]
+      return data[i]
     },
     [dimensions.columnWidth, data]
   )
@@ -56,24 +58,34 @@ export default function useChartDisplay() {
       if (rect) {
         const x = clientX - rect.left
         const y = clientY - rect.top
-        const candle = getCandleAt(x)
         dispatch({
           type: "SET_MOUSE_COORDS",
-          payload: { x, y, candle },
+          payload: { x, y },
         })
       }
     },
-    [getCandleAt, columnWidth]
+    [dispatch, ref]
   )
 
   const resizeChart = useCallback(
-    (dimensions: { height: number; width: number }) => {
-      dispatch({ type: "RESIZE_CHART", payload: dimensions })
+    (dimensions: Dimensions) => {
+      if (data.length > 0) {
+        dispatch({
+          type: "RESIZE_CHART",
+          payload: {
+            candleWidth: ((dimensions.width - 60) / data.length) * 0.8,
+            columnWidth: (dimensions.width - 60) / data.length,
+            height: dimensions.height,
+            width: dimensions.width,
+          },
+        })
+      }
     },
-    [dispatch]
+    [data, dispatch]
   )
 
   return {
+    dimensions,
     getValueAt,
     getXPosition,
     getAbsYCoord,

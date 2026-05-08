@@ -1,19 +1,16 @@
-import { Candle } from "@/types"
-import { memo } from "react"
-import CandleComponent from "./candle"
+"use client"
 
-export type GraphProps = {
-  data: Candle[]
-}
+import Candle from "./candle"
+import useChartData from "./use-chart-data"
+import useChartDisplay from "./use-chart-display"
 
-export const Graph = memo(({ data }: GraphProps) => {
-  const candleCount = useAppSelector(getCandleCount)
-  const candleWidth = useAppSelector(getCandleWidth)
-  const columnWidth = useAppSelector(getColumnWidth)
+export default function Graph() {
+  const { data } = useChartData()
+  const {dimensions: {candleWidth, columnWidth}} = useChartDisplay()
   return (
     <g>
-      {data.slice(0, candleCount).map((candle, i) => (
-        <CandleComponent
+      {data.map((candle, i) => (
+        <Candle
           data={candle}
           key={candle.time}
           width={candleWidth}
@@ -22,6 +19,4 @@ export const Graph = memo(({ data }: GraphProps) => {
       ))}
     </g>
   )
-})
-
-Graph.displayName = "game.components.graph"
+}

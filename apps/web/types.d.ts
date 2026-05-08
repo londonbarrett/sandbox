@@ -12,13 +12,8 @@ export type Candle = {
   high: number
   low: number
   open: number
-  time: string
-  EMA_200: number
-  RSI: number
-  RSI_MA: number
-  MACD: number
-  MACD_SIGNAL: number
-  Volume: number // Volume
+  time: number
+  volume: number
 }
 
 export type ChartConfig = {

@@ -1,8 +1,8 @@
-import { ChartDataContext } from "./data-provider"
+import { DataContext } from "./data-provider"
 import { use } from "react"
 
 export default function useChartData() {
-  const { state } = use(ChartDataContext)
+  const { state } = use(DataContext)
   return {
     data: state.data,
     maxValue: state.maxValue,

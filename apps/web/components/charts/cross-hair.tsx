@@ -1,8 +1,7 @@
 "use client"
 
 import { getUtcOffset } from "@store/preferences"
-import { memo, use } from "react"
-import { ChartContext } from "@common/hooks/use-chart"
+import { memo } from "react"
 
 export const CrossHair = memo(() => {
   const columnWidth = useAppSelector(getColumnWidth)

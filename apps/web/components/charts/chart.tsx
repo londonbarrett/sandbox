@@ -1,8 +1,10 @@
-import { Candle } from "@/types"
+"use client"
+
 import { ReactNode, useRef } from "react"
 import DataProvider from "./data-provider"
 import SVG from "./svg"
 import DisplayProvider from "./display-provider"
+import { Candle } from "@/types"
 
 export type ChartProps = {
   data: Candle[]

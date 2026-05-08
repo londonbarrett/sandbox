@@ -3,11 +3,8 @@ import {
   ReactNode,
   RefObject,
   TouchEvent,
-  WheelEvent,
   useCallback,
   useEffect,
-  useEffectEvent,
-  useState,
 } from "react"
 import useChartDisplay from "./use-chart-display"
 
@@ -17,9 +14,7 @@ export type SVGProps = {
 }
 
 export default function SVG({ children, ref }: SVGProps) {
-  const { setMouseCoords, resizeChart } = useChartDisplay()
-
-  const [zoom, setZoom] = useState<number>(0.01)
+  const { resizeChart, setMouseCoords } = useChartDisplay()
 
   const mouseMoveHandler = useCallback(
     (event: MouseEvent<SVGSVGElement>) => {
@@ -40,28 +35,27 @@ export default function SVG({ children, ref }: SVGProps) {
     [setMouseCoords]
   )
 
-  const wheelHandler = useCallback(
-    (event: WheelEvent<SVGSVGElement>) => {
-      let delta = zoom
-      if (event.deltaY < 0) {
-        delta = 0.002
-      } else {
-        delta = -0.002
-      }
-      if (zoom + delta > 0 && zoom + delta < 0.1) {
-        setZoom((prev) => Number((prev + delta).toFixed(3)))
-      }
-    },
-    [setZoom, zoom]
-  )
+  // const wheelHandler = useCallback(
+  //   (event: WheelEvent<SVGSVGElement>) => {
+  //     let delta = zoom
+  //     if (event.deltaY < 0) {
+  //       delta = 0.002
+  //     } else {
+  //       delta = -0.002
+  //     }
+  //     if (zoom + delta > 0 && zoom + delta < 0.1) {
+  //       setZoom((prev) => Number((prev + delta).toFixed(3)))
+  //     }
+  //   },
+  //   [setZoom, zoom]
+  // )
 
-  const onResize = useEffectEvent(() => {
+  useEffect(function resizeEffect() {
     const container = ref.current
     const observer = new ResizeObserver((entries) => {
-      resizeChart({
-        height: entries[0]?.contentRect.height || 0,
-        width: entries[0]?.contentRect.width || 0,
-      })
+      const height = entries[0]?.contentRect.height || 0
+      const width = entries[0]?.contentRect.width || 0
+      resizeChart({height, width})
     })
 
     if (container) {
@@ -73,19 +67,15 @@ export default function SVG({ children, ref }: SVGProps) {
         observer.unobserve(container)
       }
     }
-  })
-
-  useEffect(function resizeEffect() {
-    onResize()
-  }, [])
+  }, [ref, resizeChart])
 
   return (
     <svg
-      className="bg-midnight-950 h-full w-full touch-none"
+      className="bg-blue-950 h-full w-full touch-none"
       height="100%"
       onMouseMove={mouseMoveHandler}
       onTouchMove={touchMoveHandler}
-      onWheel={wheelHandler}
+      // onWheel={wheelHandler}
       ref={ref}
       width="100%"
     >

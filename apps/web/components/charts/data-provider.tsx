@@ -1,4 +1,5 @@
-import { Candle } from "@/types"
+"use client"
+
 import { createContext, Dispatch, ReactNode, useEffect, useReducer } from "react"
 import {
   DataAction,
@@ -6,6 +7,7 @@ import {
   DataState,
   setData
 } from "./data-reducer"
+import { Candle } from "@/types"
 
 const initialState = {
   data: [],

@@ -1,12 +1,16 @@
+"use client"
+
 import { createContext, RefObject, useReducer } from "react"
 import { DisplayAction, DisplayState, displayReducer } from "./display-reducer"
 
 const initialState: DisplayState = {
   candleWidth: 0,
   columnWidth: 0,
-  height: 0,
-  width: 0,
   coords: { x: 0, y: 0 },
+  graphWidth: 0,
+  height: 0,
+  valueAxisWidth: 60,
+  width: 0,
   zoom: 1
 }
 

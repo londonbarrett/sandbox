@@ -1,15 +1,36 @@
-export default function Page() {
+import Chart from "@/components/charts/chart"
+import Grid from "@/components/charts/grid"
+import Graph from "@/components/charts/graph"
+import ccxt from "ccxt"
+import data from "@/components/charts/btc.json"
+
+export const fetchOHLCV = async () => {
+  const exchange = new ccxt.coinbase({ enableRateLimit: true })
+  const symbol = "BTC/USD"
+  const timeframe = "1h"
+  const ohlcv = await exchange.fetchOHLCV(symbol, timeframe)
+  return ohlcv
+}
+
+const extractor = (candle: Array<number | undefined>) => {
+  const [time, open, high, low, close, volume] = candle
+  return {
+    time: time ?? 0,
+    open: open ?? 0,
+    high: high ?? 0,
+    low: low ?? 0,
+    close: close ?? 0,
+    volume: volume ?? 0,
+  }
+}
+
+export default async function Page() {
   return (
     <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Charts</h1>
-          <p>Charts will be here soon.</p>
-        </div>
-        <div className="text-muted-foreground font-mono text-xs">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
-      </div>
+      <Chart data={data.map(extractor)}>
+        <Grid />
+        <Graph />
+      </Chart>
     </div>
   )
 }
