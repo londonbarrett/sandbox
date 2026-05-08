@@ -52,21 +52,6 @@ export default function useChartDisplay() {
     [ref]
   )
 
-  const setMouseCoords = useCallback(
-    (clientX: number, clientY: number) => {
-      const rect = ref.current?.getBoundingClientRect()
-      if (rect) {
-        const x = clientX - rect.left
-        const y = clientY - rect.top
-        dispatch({
-          type: "SET_MOUSE_COORDS",
-          payload: { x, y },
-        })
-      }
-    },
-    [dispatch, ref]
-  )
-
   const resizeChart = useCallback(
     (dimensions: Dimensions) => {
       if (data.length > 0) {
@@ -91,7 +76,6 @@ export default function useChartDisplay() {
     getAbsYCoord,
     getYCoord,
     getYPosition,
-    setMouseCoords,
     resizeChart,
   }
 }

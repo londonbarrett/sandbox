@@ -6,17 +6,16 @@ import { DisplayAction, DisplayState, displayReducer } from "./display-reducer"
 const initialState: DisplayState = {
   candleWidth: 0,
   columnWidth: 0,
-  coords: { x: 0, y: 0 },
   graphWidth: 0,
   height: 0,
   valueAxisWidth: 60,
   width: 0,
-  zoom: 1
+  zoom: 1,
 }
 
 export const DisplayContext = createContext<{
-  ref: RefObject<SVGSVGElement | null>,
-  state: DisplayState,
+  ref: RefObject<SVGSVGElement | null>
+  state: DisplayState
   dispatch: React.Dispatch<DisplayAction>
 }>({ ref: { current: null }, state: initialState, dispatch: () => {} })
 
@@ -31,8 +30,6 @@ export default function DisplayProvider({
 }: DisplayProviderProps) {
   const [state, dispatch] = useReducer(displayReducer, initialState)
   return (
-    <DisplayContext value={{ ref, state, dispatch }}>
-      {children}
-    </DisplayContext>
+    <DisplayContext value={{ ref, state, dispatch }}>{children}</DisplayContext>
   )
 }

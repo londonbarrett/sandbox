@@ -1,12 +1,19 @@
+"use client"
+
+import { Coords } from "@/types"
 import {
+  createContext,
   MouseEvent,
   ReactNode,
   RefObject,
   TouchEvent,
   useCallback,
   useEffect,
+  useState,
 } from "react"
 import useChartDisplay from "./use-chart-display"
+
+export const MouseCoordsContext = createContext<Coords>({ x: 0, y: 0 })
 
 export type SVGProps = {
   children: ReactNode
@@ -15,27 +22,40 @@ export type SVGProps = {
   width?: number | string
 }
 
-export default function SVG({ children, height = "100%", ref, width = "100%" }: SVGProps) {
-  const { resizeChart, setMouseCoords } = useChartDisplay()
+export default function SVG({
+  children,
+  height = "100%",
+  ref,
+  width = "100%",
+}: SVGProps) {
+  const [mouseCoords, setMouseCoords] = useState<Coords>({ x: 0, y: 0 })
+  const { resizeChart } = useChartDisplay()
 
   const mouseMoveHandler = useCallback(
     (event: MouseEvent<SVGSVGElement>) => {
-      setMouseCoords(event.clientX, event.clientY)
-    },
-    [setMouseCoords]
-  )
-
-  const touchMoveHandler = useCallback(
-    (event: TouchEvent<SVGSVGElement>) => {
-      if (event.touches.length > 0) {
-        const touch = event.touches[0]
-        if (touch) {
-          setMouseCoords(touch.clientX, touch.clientY)
-        }
+      const rect = ref.current?.getBoundingClientRect()
+      if (rect) {
+        const x = event.clientX - rect.left
+        const y = event.clientY - rect.top
+        setMouseCoords({ x, y })
       }
     },
-    [setMouseCoords]
+    [ref]
   )
+
+  const touchMoveHandler = useCallback((event: TouchEvent<SVGSVGElement>) => {
+    if (event.touches.length > 0) {
+      const touch = event.touches[0]
+      if (touch) {
+        const rect = ref.current?.getBoundingClientRect()
+        if (rect) {
+          const x = touch.clientX - rect.left
+          const y = touch.clientY - rect.top
+          setMouseCoords({ x, y })
+        }
+      }
+    }
+  }, [ref])
 
   // const wheelHandler = useCallback(
   //   (event: WheelEvent<SVGSVGElement>) => {
@@ -52,36 +72,41 @@ export default function SVG({ children, height = "100%", ref, width = "100%" }: 
   //   [setZoom, zoom]
   // )
 
-  useEffect(function resizeEffect() {
-    const container = ref.current
-    const observer = new ResizeObserver((entries) => {
-      const height = entries[0]?.contentRect.height || 0
-      const width = entries[0]?.contentRect.width || 0
-      resizeChart({height, width})
-    })
+  useEffect(
+    function resizeEffect() {
+      const container = ref.current
+      const observer = new ResizeObserver((entries) => {
+        const height = entries[0]?.contentRect.height || 0
+        const width = entries[0]?.contentRect.width || 0
+        resizeChart({ height, width })
+      })
 
-    if (container) {
-      observer.observe(container)
-    }
-
-    return () => {
       if (container) {
-        observer.unobserve(container)
+        observer.observe(container)
       }
-    }
-  }, [ref, resizeChart])
+
+      return () => {
+        if (container) {
+          observer.unobserve(container)
+        }
+      }
+    },
+    [ref, resizeChart]
+  )
 
   return (
-    <svg
-      className="bg-blue-950 touch-none"
-      height={height}
-      onMouseMove={mouseMoveHandler}
-      onTouchMove={touchMoveHandler}
-      // onWheel={wheelHandler}
-      ref={ref}
-      width={width}
-    >
-      {children}
-    </svg>
+    <MouseCoordsContext value={mouseCoords}>
+      <svg
+        className="touch-none bg-blue-950"
+        height={height}
+        onMouseMove={mouseMoveHandler}
+        onTouchMove={touchMoveHandler}
+        // onWheel={wheelHandler}
+        ref={ref}
+        width={width}
+      >
+        {children}
+      </svg>
+    </MouseCoordsContext>
   )
 }

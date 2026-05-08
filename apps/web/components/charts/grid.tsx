@@ -25,7 +25,7 @@ export default function Grid() {
     <g>
       {lines.map(({ offset, key }) => (
         <line
-          className="stroke-slate-800"
+          className="stroke-blue-200/30"
           key={key}
           x1={0}
           x2={graphWidth}

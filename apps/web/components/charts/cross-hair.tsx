@@ -1,14 +1,14 @@
 "use client"
 
-import { getUtcOffset } from "@store/preferences"
-import { memo } from "react"
+import { MouseCoordsContext } from "./svg"
+import useChartDisplay from "./use-chart-display"
+import { use } from "react"
 
-export const CrossHair = memo(() => {
-  const columnWidth = useAppSelector(getColumnWidth)
-  const height = useAppSelector((state) => getHeight(state))
-  const mouseCoords = useAppSelector(getMouseCoords)
-  const graphWidth = useAppSelector(getGraphWidth)
-  const utcOffset = useAppSelector(getUtcOffset)
+export default function CrossHair() {
+  const mouseCoords = use(MouseCoordsContext)
+  const {
+    dimensions: { columnWidth, height, graphWidth },
+  } = useChartDisplay()
 
   if (mouseCoords.x + mouseCoords.y === 0) {
     return null
@@ -23,22 +23,20 @@ export const CrossHair = memo(() => {
     Math.floor(
       (mouseCoords.x || 0) < graphWidth
         ? (mouseCoords.x || 0) / columnWidth
-        : (graphWidth - columnWidth) / columnWidth,
+        : (graphWidth - columnWidth) / columnWidth
     ) *
-    columnWidth +
+      columnWidth +
     columnWidth / 2
 
   return (
     <g>
-      {mouseCoords.chartId === id && (
-        <line
-          className="stroke-indigo-200 [stroke-dasharray:3]"
-          x1={0}
-          x2={graphWidth}
-          y1={mouseCoords.y}
-          y2={mouseCoords.y}
-        />
-      )}
+      <line
+        className="stroke-indigo-200 [stroke-dasharray:3]"
+        x1={0}
+        x2={graphWidth}
+        y1={mouseCoords.y}
+        y2={mouseCoords.y}
+      />
       <line
         className="stroke-indigo-200 [stroke-dasharray:3]"
         x1={snappedPosition}
@@ -48,6 +46,6 @@ export const CrossHair = memo(() => {
       />
     </g>
   )
-})
+}
 
 CrossHair.displayName = "game.components.cross-hair"
