@@ -10,6 +10,7 @@ type Action<K, T> = {
 export type Candle = {
   close: number
   high: number
+  index: number
   low: number
   open: number
   time: number
@@ -42,6 +43,7 @@ export type Dimensions = {
 }
 
 export type Coords = {
+  candle?: Candle
   x: number
   y: number
 }

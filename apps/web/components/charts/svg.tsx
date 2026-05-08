@@ -13,7 +13,8 @@ import {
 } from "react"
 import useChartDisplay from "./use-chart-display"
 
-export const MouseCoordsContext = createContext<Coords>({ x: 0, y: 0 })
+// TODO: Move to a separate file?
+export const MouseCoordsContext = createContext<Coords>({candle: undefined, x: 0, y: 0 })
 
 export type SVGProps = {
   children: ReactNode
@@ -28,8 +29,8 @@ export default function SVG({
   ref,
   width = "100%",
 }: SVGProps) {
-  const [mouseCoords, setMouseCoords] = useState<Coords>({ x: 0, y: 0 })
-  const { resizeChart } = useChartDisplay()
+  const [mouseCoords, setMouseCoords] = useState<Coords>({candle: undefined, x: 0, y: 0 })
+  const { getCandleAt, resizeChart } = useChartDisplay()
 
   const mouseMoveHandler = useCallback(
     (event: MouseEvent<SVGSVGElement>) => {
@@ -37,10 +38,11 @@ export default function SVG({
       if (rect) {
         const x = event.clientX - rect.left
         const y = event.clientY - rect.top
-        setMouseCoords({ x, y })
+        const candle = getCandleAt(x)
+        setMouseCoords({candle, x, y })
       }
     },
-    [ref]
+    [getCandleAt,ref]
   )
 
   const touchMoveHandler = useCallback((event: TouchEvent<SVGSVGElement>) => {

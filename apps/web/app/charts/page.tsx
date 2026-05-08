@@ -4,6 +4,7 @@ import Graph from "@/components/charts/graph"
 import ccxt from "ccxt"
 import data from "@/components/charts/btc.json"
 import CrossHair from "@/components/charts/cross-hair"
+import Status from "@/components/charts/status"
 
 export const fetchOHLCV = async () => {
   const exchange = new ccxt.coinbase({ enableRateLimit: true })
@@ -13,14 +14,15 @@ export const fetchOHLCV = async () => {
   return ohlcv
 }
 
-const extractor = (candle: Array<number | undefined>) => {
+const extractor = (candle: Array<number | undefined>, index: number) => {
   const [time, open, high, low, close, volume] = candle
   return {
-    time: time ?? 0,
-    open: open ?? 0,
-    high: high ?? 0,
-    low: low ?? 0,
     close: close ?? 0,
+    high: high ?? 0,
+    index,
+    low: low ?? 0,
+    open: open ?? 0,
+    time: time ?? 0,
     volume: volume ?? 0,
   }
 }
@@ -32,6 +34,7 @@ export default async function Page() {
         <Grid />
         <Graph />
         <CrossHair />
+        <Status symbol="BTC/USD" interval="1h" />
       </Chart>
     </div>
   )

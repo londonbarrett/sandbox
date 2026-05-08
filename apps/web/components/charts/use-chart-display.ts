@@ -71,6 +71,7 @@ export default function useChartDisplay() {
 
   return {
     dimensions,
+    getCandleAt,
     getValueAt,
     getXPosition,
     getAbsYCoord,
