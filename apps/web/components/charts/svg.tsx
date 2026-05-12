@@ -105,6 +105,7 @@ export default function SVG({
         onTouchMove={touchMoveHandler}
         // onWheel={wheelHandler}
         ref={ref}
+        shapeRendering="crispEdges"
         width={width}
       >
         {children}

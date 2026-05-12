@@ -1,3 +1,4 @@
+// TODO: instantiate and return function
 export const getCurrencyFormatter = (
   value: number,
   style: "currency" | "decimal" = "currency",
