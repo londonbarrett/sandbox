@@ -13,13 +13,13 @@ import {
 } from "lucide-react"
 import * as React from "react"
 import MainNav from "./main-nav"
+import { url } from "node:inspector"
 
 // This is sample data.
 const data = {
   navMain: [
     {
       title: "Utilities",
-      url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
@@ -36,15 +36,15 @@ const data = {
           url: "#",
         },
       ],
+      url: "#"
     },
     {
-      title: "React",
-      url: "#",
+      title: "Pokemon",
       icon: Bot,
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: "List",
+          url: "/pokemon",
         },
         {
           title: "Explorer",
@@ -55,6 +55,7 @@ const data = {
           url: "#",
         },
       ],
+      url: "#"
     },
     {
       title: "Next",
