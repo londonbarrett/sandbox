@@ -1,7 +1,7 @@
 "use client"
 
 import { memo } from "react"
-import useChartDisplay from "./use-chart-display"
+import useChartDimensions from "./use-chart-dimensions"
 
 export type SymbolProps = {
   symbol: string
@@ -9,7 +9,7 @@ export type SymbolProps = {
 }
 
 const Symbol = memo(({ symbol, interval }: SymbolProps) => {
-  const {dimensions: {valueAxisWidth}} = useChartDisplay()
+  const {state: {valueAxisWidth}} = useChartDimensions()
 
   return (
     <text

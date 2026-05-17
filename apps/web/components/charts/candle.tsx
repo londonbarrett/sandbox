@@ -1,4 +1,4 @@
-import useChartDisplay from "./use-chart-display"
+import useChartDisplay from "./use-chart-dimensions"
 import { Candle as CandleType } from "@/types"
 import clsx from "clsx"
 import { memo } from "react"

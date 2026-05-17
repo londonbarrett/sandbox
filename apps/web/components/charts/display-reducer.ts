@@ -1,59 +1,33 @@
-import { Action, Coords } from "@/types"
+import { Action } from "@/types"
 
 export type DisplayState = {
-  candleWidth: number
-  columnWidth: number
-  graphWidth: number
-  height: number
-  valueAxisWidth: number
-  width: number
+  offsetX: number
   zoom: number
 }
 
 export type DisplayAction =
-  | Action<"SET_MOUSE_COORDS", Coords>
-  | Action<
-      "RESIZE_CHART",
-      {
-        height: number
-        width: number
-        columnWidth: number
-        candleWidth: number
-      }
-    >
+  | Action<"PAN_BY", { deltaX: number; maxOffset: number }>
+  | Action<"SET_ZOOM", number>
 
-export const displayReducer = (state: DisplayState, action: DisplayAction) => {
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max)
+
+export const displayReducer = (
+  state: DisplayState,
+  action: DisplayAction
+): DisplayState => {
   switch (action.type) {
-    case "RESIZE_CHART": {
-      return {
-        ...state,
-        ...action.payload,
-        graphWidth: action.payload.width - state.valueAxisWidth,
-        candleWidth: action.payload.candleWidth,
-        columnWidth: action.payload.columnWidth,
-      }
+    case "PAN_BY": {
+      const nextOffset = clamp(
+        state.offsetX - action.payload.deltaX,
+        -action.payload.maxOffset,
+        action.payload.maxOffset,
+      )
+      return { ...state, offsetX: nextOffset }
     }
+    case "SET_ZOOM":
+      return { ...state, zoom: action.payload }
     default:
       return state
   }
 }
-
-export const resizeChart = ({
-  candleWidth,
-  columnWidth,
-  height,
-  width,
-}: {
-  candleWidth: number
-  columnWidth: number
-  height: number
-  width: number
-}): DisplayAction => ({
-  type: "RESIZE_CHART",
-  payload: {
-    candleWidth,
-    columnWidth,
-    height,
-    width,
-  },
-})

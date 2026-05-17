@@ -1,35 +1,25 @@
-"use client"
+import { createContext, useReducer } from "react"
+import { displayReducer } from "./display-reducer"
 
-import { createContext, RefObject, useReducer } from "react"
-import { DisplayAction, DisplayState, displayReducer } from "./display-reducer"
-
-const initialState: DisplayState = {
-  candleWidth: 0,
-  columnWidth: 0,
-  graphWidth: 0,
-  height: 0,
-  valueAxisWidth: 60,
-  width: 0,
+const initialState = {
+  offsetX: 0,
   zoom: 1,
 }
 
 export const DisplayContext = createContext<{
-  ref: RefObject<SVGSVGElement | null>
-  state: DisplayState
-  dispatch: React.Dispatch<DisplayAction>
-}>({ ref: { current: null }, state: initialState, dispatch: () => {} })
-
-export type DisplayProviderProps = {
-  children: React.ReactNode
-  ref: RefObject<SVGSVGElement | null>
-}
+  state: typeof initialState
+  dispatch: React.Dispatch<any>
+}>({ state: initialState, dispatch: () => {} })
 
 export default function DisplayProvider({
   children,
-  ref,
-}: DisplayProviderProps) {
+}: {
+  children: React.ReactNode
+}) {
   const [state, dispatch] = useReducer(displayReducer, initialState)
   return (
-    <DisplayContext value={{ ref, state, dispatch }}>{children}</DisplayContext>
+    <DisplayContext.Provider value={{ state, dispatch }}>
+      {children}
+    </DisplayContext.Provider>
   )
 }

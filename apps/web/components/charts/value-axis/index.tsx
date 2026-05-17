@@ -4,16 +4,16 @@ import * as d3 from "d3"
 import { use, useMemo } from "react"
 import { MouseCoordsContext } from "../svg"
 import useChartData from "../use-chart-data"
-import useChartDisplay from "../use-chart-display"
+import useChartDimensions from "../use-chart-dimensions"
 import { getCurrencyFormatter } from "../util"
 import Legend from "./legend"
 
 export default function ValueAxis() {
   const { maxValue, minValue } = useChartData()
   const {
-    dimensions: { graphWidth, height, valueAxisWidth },
+    state: { graphWidth, height, valueAxisWidth },
     getValueAt,
-  } = useChartDisplay()
+  } = useChartDimensions()
   const mouseCoords = use(MouseCoordsContext)
   const formatCurrency = getCurrencyFormatter
 

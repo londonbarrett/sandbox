@@ -1,14 +1,14 @@
 "use client"
 
 import { MouseCoordsContext } from "./svg"
-import useChartDisplay from "./use-chart-display"
+import useChartDimensions from "./use-chart-dimensions"
 import { use } from "react"
 
 export default function CrossHair() {
   const mouseCoords = use(MouseCoordsContext)
   const {
-    dimensions: { columnWidth, height, graphWidth },
-  } = useChartDisplay()
+    state: { columnWidth, height, graphWidth },
+  } = useChartDimensions()
 
   if (mouseCoords.x + mouseCoords.y === 0) {
     return null
