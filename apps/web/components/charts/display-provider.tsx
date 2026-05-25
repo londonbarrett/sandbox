@@ -1,14 +1,22 @@
 import { createContext, useReducer } from "react"
-import { displayReducer } from "./display-reducer"
+import {
+  DisplayAction,
+  displayReducer,
+  DisplayState,
+} from "./display-reducer"
 
 const initialState = {
+  maxDisplayCandles: 400,
+  maxOffsetX: 0,
+  minDisplayCandles: 20,
+  minOffsetX: 0,
   offsetX: 0,
-  zoom: 1,
+  displayCandles: 10,
 }
 
 export const DisplayContext = createContext<{
-  state: typeof initialState
-  dispatch: React.Dispatch<any>
+  state: DisplayState
+  dispatch: React.Dispatch<DisplayAction>
 }>({ state: initialState, dispatch: () => {} })
 
 export default function DisplayProvider({

@@ -1,4 +1,4 @@
-import { Action, Candle } from "@/types"
+import { Candle, PayloadAction } from "@/types"
 
 export type DataState = {
   data: Candle[]
@@ -6,13 +6,16 @@ export type DataState = {
   minValue: number
 }
 
-export type DataAction = Action<"SET_DATA", Candle[]>
+export type DataAction = PayloadAction<"SET_DATA", Candle[]>
 
 export const dataReducer = (state: DataState, action: DataAction) => {
   switch (action.type) {
     case "SET_DATA": {
       const data = action.payload
-      const allValues = data.flatMap((candle) => [candle.high, candle.low])
+      const allValues = data.flatMap((candle) => [
+        candle.high,
+        candle.low,
+      ])
       const maxValue = Number(Math.max(...allValues))
       const minValue = Number(Math.min(...allValues))
       return { ...state, data, maxValue, minValue }

@@ -9,6 +9,7 @@ import {
   // TouchEvent,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react"
 import useChartDimensions from "./use-chart-dimensions"
@@ -20,11 +21,6 @@ export const MouseCoordsContext = createContext<Coords>({
   x: 0,
   y: 0,
 })
-
-export const MouseContext = createContext<{
-  offsetX: number
-  setOffsetX: (xOffset: number) => void
-}>({ offsetX: 0, setOffsetX: () => {} })
 
 /**
  * Chart panning and zooming logic:
@@ -46,20 +42,39 @@ export type SVGProps = {
   width?: number | string
 }
 
+const useMouseLock = (delay: number = 300) => {
+  const timeout = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const [mouseLock, setValue] = useState<"PAN" | "ZOOM">()
+  const setMouseLock = (deltaX: number, deltaY: number) => {
+    if (!mouseLock) {
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        setValue("PAN")
+      } else {
+        setValue("ZOOM")
+      }
+      timeout.current = setTimeout(() => {
+        setValue(undefined)
+      }, delay)
+    }
+  }
+  return { mouseLock, setMouseLock }
+}
+
 export default function SVG({
   children,
   height = "100%",
   ref,
   width = "100%",
 }: SVGProps) {
-  const { offsetX, setOffsetX } = useChartDisplay()
+  const [mouseMode] = useState("BOTH")
+  const { mouseLock, setMouseLock } = useMouseLock()
+  const { gauge, pan, zoom } = useChartDisplay()
   const [mouseCoords, setMouseCoords] = useState<Coords>({
     candle: undefined,
     x: 0,
     y: 0,
   })
-  // const [offsetX, setOffsetX] = useState(0)
-  const { getCandleAt, resizeChart } = useChartDimensions()
+  const { getCandleAt, resize } = useChartDimensions()
 
   const mouseMoveHandler = useCallback(
     (event: MouseEvent<SVGSVGElement>) => {
@@ -94,7 +109,23 @@ export default function SVG({
   const wheelHandler = useCallback(
     (event: WheelEvent) => {
       event.preventDefault()
-      setOffsetX(event.deltaX)
+      setMouseLock(event.deltaX, event.deltaY)
+      if (mouseMode === "SPLIT") {
+        if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+          // pan(event.deltaX / 2)
+        } else {
+          zoom(event.deltaY)
+        }
+      } else if (mouseMode === "BOTH") {
+        pan(event.deltaX / 2)
+        // zoom(event.deltaY)
+      } else if (mouseMode === "LOCK") {
+        if (mouseLock === "PAN") {
+          pan(event.deltaX)
+        } else {
+          zoom(event.deltaY)
+        }
+      }
       // let delta = zoom
       // if (event.deltaY < 0) {
       //   delta = 0.002
@@ -105,16 +136,18 @@ export default function SVG({
       //   setZoom((prev) => Number((prev + delta).toFixed(3)))
       // }
     },
-    [setOffsetX]
+    [mouseLock, mouseMode, setMouseLock, pan, zoom]
   )
 
   useEffect(
     function resizeEffect() {
       const container = ref.current
       const observer = new ResizeObserver((entries) => {
+        console.log("RESIZE")
         const height = entries[0]?.contentRect.height || 0
         const width = entries[0]?.contentRect.width || 0
-        resizeChart({ height, width })
+        resize({ height, width })
+        // gauge()
       })
 
       if (container) {
@@ -127,36 +160,58 @@ export default function SVG({
         }
       }
     },
-    [resizeChart]
+    [ref, resize]
+  )
+
+  useEffect(
+    function gaugeEffect() {
+      const container = ref.current
+      const observer = new ResizeObserver(() => {
+        console.log("GAUGE")
+        gauge()
+      })
+
+      if (container) {
+        observer.observe(container)
+      }
+
+      return () => {
+        if (container) {
+          observer.unobserve(container)
+        }
+      }
+    },
+    [gauge, ref]
   )
 
   useEffect(() => {
     const container = ref.current
     if (container) {
-      container.addEventListener("wheel", wheelHandler, { passive: false })
+      container.addEventListener("wheel", wheelHandler, {
+        passive: false,
+      })
     }
     return () => {
       if (container) {
         container.removeEventListener("wheel", wheelHandler)
+        // TODO: Add timer
       }
     }
-  }, [wheelHandler])
+  }, [ref, wheelHandler])
 
   return (
     <MouseCoordsContext value={mouseCoords}>
-      <MouseContext value={{ offsetX, setOffsetX }}>
-        <svg
-          className="touch-pan-y touch-none overscroll-x-none bg-blue-950"
-          height={height}
-          onMouseMove={mouseMoveHandler}
-          // onTouchMove={touchMoveHandler}
-          ref={ref}
-          shapeRendering="crispEdges"
-          width={width}
-        >
-          {children}
-        </svg>
-      </MouseContext>
+      <svg
+        className="touch-pan-y touch-none overscroll-x-none bg-blue-950"
+        height={height}
+        onMouseMove={mouseMoveHandler}
+        // onTouchMove={touchMoveHandler}
+        ref={ref}
+        shapeRendering="crispEdges"
+        width={width}
+      >
+        {children}
+      </svg>
     </MouseCoordsContext>
   )
 }

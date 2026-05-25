@@ -8,12 +8,16 @@ import useChartDimensions from "../use-chart-dimensions"
 import { getCurrencyFormatter } from "../util"
 import Legend from "./legend"
 
-export default function ValueAxis() {
+export type ValueAxisProps = {
+  pixelsPerTick?: number
+}
+
+export default function ValueAxis({
+  pixelsPerTick = 50,
+}: ValueAxisProps) {
   const { maxValue, minValue } = useChartData()
-  const {
-    state: { graphWidth, height, valueAxisWidth },
-    getValueAt,
-  } = useChartDimensions()
+  const { height, valueAxisWidth, viewportWidth, getValueAt } =
+    useChartDimensions()
   const mouseCoords = use(MouseCoordsContext)
   const formatCurrency = getCurrencyFormatter
 
@@ -23,16 +27,18 @@ export default function ValueAxis() {
       .domain([maxValue, minValue])
       .range([0, height])
     // TODO: move pixelsPerTick to a reducer or context so it can be dynamic based on zoom level
-    const pixelsPerTick = 50
-    const numberOfTicksTarget = Math.max(1, Math.floor(height / pixelsPerTick))
+    const numberOfTicksTarget = Math.max(
+      1,
+      Math.floor(height / pixelsPerTick)
+    )
     return scale.ticks(numberOfTicksTarget).map((value) => ({
       value,
       offset: scale(value),
     }))
-  }, [maxValue, minValue, height])
+  }, [height, maxValue, minValue, pixelsPerTick])
 
   return (
-    <g transform={`translate(${graphWidth})`}>
+    <g transform={`translate(${viewportWidth})`}>
       {ticks.map(({ value, offset }) => (
         <text
           className="fill-foreground text-[9px] select-none"

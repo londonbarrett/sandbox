@@ -1,21 +1,26 @@
-import { Action } from "@/types"
+import { PayloadAction } from "@/types"
 
+// TODO: Split into chart dimensions and graph dimensions
 export type DimensionsState = {
+  // graphDimensions
   candleWidth: number
   columnWidth: number
   graphWidth: number
+  // chart dimensions
+  viewportWidth: number
   height: number
   valueAxisWidth: number
   width: number
 }
 
-export type DimensionsAction = Action<
-  "RESIZE_CHART",
+export type DimensionsAction = PayloadAction<
+  "RESIZE",
   {
+    candleWidth: number
+    columnWidth: number
+    graphWidth: number
     height: number
     width: number
-    columnWidth: number
-    candleWidth: number
   }
 >
 
@@ -24,13 +29,12 @@ export const dimensionsReducer = (
   action: DimensionsAction
 ) => {
   switch (action.type) {
-    case "RESIZE_CHART": {
+    case "RESIZE": {
+      console.log("REDUXER RESIZE")
       return {
         ...state,
         ...action.payload,
-        graphWidth: action.payload.width - state.valueAxisWidth,
-        candleWidth: action.payload.candleWidth,
-        columnWidth: action.payload.columnWidth,
+        viewportWidth: action.payload.width - state.valueAxisWidth,
       }
     }
     default:

@@ -3,37 +3,41 @@
 import { MouseCoordsContext } from "./svg"
 import useChartDimensions from "./use-chart-dimensions"
 import { use } from "react"
+import useChartDisplay from "./use-chart-display"
 
 export default function CrossHair() {
   const mouseCoords = use(MouseCoordsContext)
-  const {
-    state: { columnWidth, height, graphWidth },
-  } = useChartDimensions()
+  const { columnWidth, height, viewportWidth } = useChartDimensions()
+  const { offsetX } = useChartDisplay()
 
   if (mouseCoords.x + mouseCoords.y === 0) {
     return null
   }
 
   // Prevent division by zero or NaN values
-  if (!columnWidth || columnWidth === 0 || !graphWidth) {
+  if (!columnWidth || columnWidth === 0 || !viewportWidth) {
     return null
   }
 
+  const offsetAdjustment = -offsetX % columnWidth
+  // console.log("ADJ", offsetX, offsetAdjustment)
+
   const snappedPosition =
     Math.floor(
-      (mouseCoords.x || 0) < graphWidth
-        ? (mouseCoords.x || 0) / columnWidth
-        : (graphWidth - columnWidth) / columnWidth
+      mouseCoords.x + offsetAdjustment < viewportWidth
+        ? (mouseCoords.x + offsetAdjustment) / columnWidth
+        : (viewportWidth - columnWidth) / columnWidth
     ) *
       columnWidth +
-    columnWidth / 2
+    columnWidth / 2 -
+    offsetAdjustment
 
   return (
     <g>
       <line
         className="stroke-indigo-200 [stroke-dasharray:3]"
         x1={0}
-        x2={graphWidth}
+        x2={viewportWidth}
         y1={mouseCoords.y}
         y2={mouseCoords.y}
       />

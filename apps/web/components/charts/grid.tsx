@@ -6,7 +6,7 @@ import useChartData from "./use-chart-data"
 import useChartDimensions from "./use-chart-dimensions"
 
 export default function Grid() {
-  const { state: { graphWidth, height } } = useChartDimensions()
+  const { height, viewportWidth } = useChartDimensions()
   const { maxValue, minValue } = useChartData()
   const lines = useMemo(() => {
     const scale = d3
@@ -14,7 +14,10 @@ export default function Grid() {
       .domain([maxValue, minValue])
       .range([0, height])
     const pixelsPerLine = 50
-    const numberOfTicksTarget = Math.max(1, Math.floor(height / pixelsPerLine))
+    const numberOfTicksTarget = Math.max(
+      1,
+      Math.floor(height / pixelsPerLine)
+    )
     return scale.ticks(numberOfTicksTarget).map((value, index) => ({
       value,
       offset: scale(value),
@@ -28,7 +31,7 @@ export default function Grid() {
           className="stroke-blue-200/30"
           key={key}
           x1={0}
-          x2={graphWidth}
+          x2={viewportWidth}
           y1={offset}
           y2={offset}
         />

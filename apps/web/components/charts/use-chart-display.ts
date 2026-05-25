@@ -1,21 +1,36 @@
-import { useContext } from "react"
+import { useCallback, use } from "react"
 import { DisplayContext } from "./display-provider"
+import { DimensionsContext } from "./dimensions-provider"
 
 export default function useChartDisplay() {
-  const { state, dispatch } = useContext(DisplayContext)
+  const { state, dispatch } = use(DisplayContext)
+  const { state: dimensions } = use(DimensionsContext)
 
-  const setOffsetX = (deltaX: number) => {
-    console.log("HOOK SET OFFSET X", deltaX)
-    dispatch({ type: "SET_OFFSET_X", payload: deltaX })
-  }
+  const gauge = useCallback(
+    () => dispatch({ type: "GAUGE", payload: dimensions }),
+    [dimensions, dispatch]
+  )
 
-  const setZoom = (zoom: number) => {
-    dispatch({ type: "SET_ZOOM", payload: zoom })
-  }
+  const pan = useCallback(
+    (deltaX: number) =>
+      dispatch({
+        type: "PAN",
+        payload: deltaX,
+      }),
+    [dispatch]
+  )
 
+  const zoom = useCallback(
+    // TODO: When zooming, graph position should be locked at the position before zooming
+    (zoom: number) => {
+      dispatch({ type: "ZOOM", payload: zoom })
+    },
+    [dispatch]
+  )
   return {
     ...state,
-    setOffsetX,
-    setZoom,
+    gauge,
+    pan,
+    zoom,
   }
 }

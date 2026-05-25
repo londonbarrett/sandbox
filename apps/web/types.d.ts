@@ -1,4 +1,8 @@
-type Action<K, T> = {
+export type Action<K> = {
+  type: K
+}
+
+export type PayloadAction<K, T> = {
   type: K
   payload: T
 }

@@ -13,6 +13,7 @@ const initialState: DimensionsState = {
   graphWidth: 0,
   height: 0,
   valueAxisWidth: 60,
+  viewportWidth: 0,
   width: 0,
 }
 

@@ -1,17 +1,16 @@
 "use client"
 
-import { use, useMemo } from "react"
+import { useMemo } from "react"
 import useChartData from "./use-chart-data"
-import useChartDisplay from "./use-chart-dimensions"
-import { MouseContext } from "./svg"
+import useChartDimensions from "./use-chart-dimensions"
+import useChartDisplay from "./use-chart-display"
 
+// TODO: This conponent should be named OHLCV
 export default function Graph() {
   const { data } = useChartData()
-  const {
-    state: { candleWidth, columnWidth },
-    getAbsYCoord,
-  } = useChartDisplay()
-  const { offsetX } = use(MouseContext)
+  const { candleWidth, columnWidth, getAbsYCoord } =
+    useChartDimensions()
+  const { offsetX } = useChartDisplay()
 
   // Memoize path generation so it only recalculated when data or widths change
   const { bullishPath, bearishPath } = useMemo(() => {
@@ -28,7 +27,8 @@ export default function Graph() {
 
       const up = candle.close > candle.open
 
-      const x = columnWidth * i + columnWidth * 0.15
+      // TODO: 0.1 should be a value in a config object related to column width
+      const x = columnWidth * i + columnWidth * 0.1
       const midX = x + halfWidth
 
       const barTop = getAbsYCoord(up ? candle.close : candle.open)

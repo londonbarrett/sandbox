@@ -9,12 +9,12 @@ export type SymbolProps = {
 }
 
 const Symbol = memo(({ symbol, interval }: SymbolProps) => {
-  const {state: {valueAxisWidth}} = useChartDimensions()
+  const { valueAxisWidth } = useChartDimensions()
 
   return (
     <text
       transform={`translate(${-(valueAxisWidth / 2)}, 0)`}
-      className="fill-slate-200/10 select-none text-4xl sm:text-7xl font-bold"
+      className="fill-slate-200/10 text-4xl font-bold select-none sm:text-7xl"
       x="50%"
       y="50%"
       textAnchor="middle"
