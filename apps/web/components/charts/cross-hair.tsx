@@ -19,18 +19,13 @@ export default function CrossHair() {
     return null
   }
 
-  const offsetAdjustment = -offsetX % columnWidth
-  // console.log("ADJ", offsetX, offsetAdjustment)
+  const offsetXAdjustment = -offsetX % columnWidth
 
   const snappedPosition =
-    Math.floor(
-      mouseCoords.x + offsetAdjustment < viewportWidth
-        ? (mouseCoords.x + offsetAdjustment) / columnWidth
-        : (viewportWidth - columnWidth) / columnWidth
-    ) *
+    Math.floor((mouseCoords.x + offsetXAdjustment) / columnWidth) *
       columnWidth +
     columnWidth / 2 -
-    offsetAdjustment
+    offsetXAdjustment
 
   return (
     <g>
