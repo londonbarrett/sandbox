@@ -2,14 +2,12 @@
 
 import { useMemo } from "react"
 import useChartData from "./use-chart-data"
-import useChartDimensions from "./use-chart-dimensions"
 import useChartDisplay from "./use-chart-display"
 
 // TODO: This conponent should be named OHLCV
 export default function Graph() {
   const { data } = useChartData()
-  const { candleWidth, columnWidth, getAbsYCoord } =
-    useChartDimensions()
+  const { candleWidth, columnWidth, getAbsYCoord } = useChartDisplay()
   const { offsetX } = useChartDisplay()
 
   // Memoize path generation so it only recalculated when data or widths change

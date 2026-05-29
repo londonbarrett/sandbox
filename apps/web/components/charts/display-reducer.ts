@@ -1,17 +1,28 @@
 import { PayloadAction } from "@/types"
-import { DimensionsState } from "./dimensions-reducer"
 
 export type DisplayState = {
+  candleFactor: number
+  candleWidth: number
+  columnWidth: number
+  dataLength: number
+  displayCandles: number
+  graphWidth: number
+  height: number
   maxDisplayCandles: number
   maxOffsetX: number
   minDisplayCandles: number
   minOffsetX: number
   offsetX: number
-  displayCandles: number
+  viewportWidth: number
+  valueAxisWidth: number
+  width: number
 }
 
 export type DisplayAction =
-  | PayloadAction<"GAUGE", DimensionsState>
+  | PayloadAction<
+      "RESIZE",
+      { dataLength: number; height: number; width: number }
+    >
   | PayloadAction<"PAN", number>
   | PayloadAction<"ZOOM", number>
 
@@ -29,22 +40,32 @@ export const displayReducer = (
             : state.offsetX - action.payload
       return { ...state, offsetX: nextOffset }
     }
-    case "GAUGE": {
-      console.log("GAUGE")
+    case "RESIZE": {
+      console.log("REDUCER RESIZE")
+      const viewportWidth = action.payload.width - state.valueAxisWidth
+      const columnWidth = viewportWidth / state.displayCandles
+      const graphWidth = action.payload.dataLength * columnWidth
+      const maxOffsetX = viewportWidth / 4
+      const minOffsetX = viewportWidth - graphWidth - viewportWidth / 4
       return {
         ...state,
-        maxOffsetX: action.payload.viewportWidth / 4,
-        minOffsetX:
-          action.payload.viewportWidth -
-          action.payload.graphWidth -
-          action.payload.viewportWidth / 4,
-        offsetX: 0,
-        // action.payload.viewportWidth -
-        // action.payload.graphWidth -
-        // action.payload.viewportWidth / 4,
+        // TODO: Candle Scale factor should be in a config object
+        candleWidth: columnWidth * state.candleFactor,
+        columnWidth,
+        dataLength: action.payload.dataLength,
+        graphWidth,
+        height: action.payload.height,
+        maxOffsetX,
+        minOffsetX,
+        offsetX: maxOffsetX,
+        viewportWidth,
+        width: action.payload.width,
       }
     }
-    case "ZOOM":
+    case "ZOOM": {
+      const offsetX =
+        ((state.displayCandles + action.payload) * state.offsetX) /
+        state.displayCandles
       // state.displayCandles + deltaX      =>    newOffsetX
       // state.displayCandles               =>    state.offsetX
       //
@@ -76,39 +97,40 @@ export const displayReducer = (
       //   (action.zoom * state.offsetX * newDisplayCandles) /
       //   state.displayCandles
 
-      const offsetX =
-        ((state.displayCandles + action.payload) * state.offsetX) /
-        state.displayCandles
+      // console.log(
+      //   "NEW OFFSETX",
+      //   offsetX,
+      //   action.payload,
+      //   state.displayCandles,
+      //   state.offsetX
+      // )
 
-      console.log(
-        "NEW OFFSETX",
-        offsetX,
-        action.payload,
-        state.displayCandles,
-        state.offsetX
-      )
-
-      if (action.payload > 0) {
-        return {
-          ...state,
-          offsetX,
-          displayCandles:
-            state.displayCandles + action.payload <
+      const displayCandles =
+        action.payload > 0
+          ? state.displayCandles + action.payload <
             state.maxDisplayCandles
-              ? state.displayCandles + action.payload
-              : state.maxDisplayCandles,
-        }
-      } else {
-        return {
-          ...state,
-          offsetX,
-          displayCandles:
-            state.displayCandles + action.payload >
-            state.minDisplayCandles
-              ? state.displayCandles + action.payload
-              : state.minDisplayCandles,
-        }
+            ? state.displayCandles + action.payload
+            : state.maxDisplayCandles
+          : state.displayCandles + action.payload >
+              state.minDisplayCandles
+            ? state.displayCandles + action.payload
+            : state.minDisplayCandles
+
+      const columnWidth = state.viewportWidth / displayCandles
+      const graphWidth = state.dataLength * columnWidth
+      const maxOffsetX = state.viewportWidth / 4
+      const minOffsetX =
+        state.viewportWidth - graphWidth - state.viewportWidth / 4
+
+      return {
+        ...state,
+        displayCandles,
+        columnWidth,
+        candleWidth: columnWidth * state.candleFactor,
+        maxOffsetX,
+        minOffsetX,
       }
+    }
     default:
       return state
   }

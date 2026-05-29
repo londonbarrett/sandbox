@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react"
+import { createContext, RefObject, useReducer } from "react"
 import {
   DisplayAction,
   displayReducer,
@@ -6,27 +6,39 @@ import {
 } from "./display-reducer"
 
 const initialState = {
+  candleFactor: 0.8,
+  candleWidth: 0,
+  columnWidth: 0,
+  displayCandles: 100,
+  dataLength: 0,
+  graphWidth: 0,
+  height: 0,
   maxDisplayCandles: 400,
+  minDisplayCandles: 50,
   maxOffsetX: 0,
-  minDisplayCandles: 20,
   minOffsetX: 0,
   offsetX: 0,
-  displayCandles: 10,
+  valueAxisWidth: 60,
+  viewportWidth: 0,
+  width: 0,
 }
 
 export const DisplayContext = createContext<{
+  ref: RefObject<SVGSVGElement | null>
   state: DisplayState
   dispatch: React.Dispatch<DisplayAction>
-}>({ state: initialState, dispatch: () => {} })
+}>({ ref: { current: null }, state: initialState, dispatch: () => {} })
 
 export default function DisplayProvider({
   children,
+  ref,
 }: {
   children: React.ReactNode
+  ref: RefObject<SVGSVGElement | null>
 }) {
   const [state, dispatch] = useReducer(displayReducer, initialState)
   return (
-    <DisplayContext.Provider value={{ state, dispatch }}>
+    <DisplayContext.Provider value={{ ref, state, dispatch }}>
       {children}
     </DisplayContext.Provider>
   )

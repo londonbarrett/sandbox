@@ -3,10 +3,10 @@
 import * as d3 from "d3"
 import { useMemo } from "react"
 import useChartData from "./use-chart-data"
-import useChartDimensions from "./use-chart-dimensions"
+import useChartDisplay from "./use-chart-display"
 
 export default function Grid() {
-  const { height, viewportWidth } = useChartDimensions()
+  const { height, viewportWidth } = useChartDisplay()
   const { maxValue, minValue } = useChartData()
   const lines = useMemo(() => {
     const scale = d3

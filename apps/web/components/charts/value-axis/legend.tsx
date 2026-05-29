@@ -1,4 +1,4 @@
-import useChartDimensions from "../use-chart-dimensions"
+import useChartDisplay from "../use-chart-display"
 
 export type LegendProps = {
   label: string
@@ -6,7 +6,7 @@ export type LegendProps = {
 }
 
 export default function Legend({ label, value }: LegendProps) {
-  const { valueAxisWidth } = useChartDimensions()
+  const { valueAxisWidth } = useChartDisplay()
   return (
     <g>
       <rect
