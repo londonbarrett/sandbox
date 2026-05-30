@@ -1,28 +1,27 @@
 "use client"
 
-import * as d3 from "d3"
 import { useMemo } from "react"
 import useChartData from "./use-chart-data"
 import useChartDisplay from "./use-chart-display"
+import { createLinearScale, niceTicks } from "./util"
 
 export default function Grid() {
   const { height, viewportWidth } = useChartDisplay()
   const { maxValue, minValue } = useChartData()
   const lines = useMemo(() => {
-    const scale = d3
-      .scaleLinear()
-      .domain([maxValue, minValue])
-      .range([0, height])
+    const scale = createLinearScale([maxValue, minValue], [0, height])
     const pixelsPerLine = 50
     const numberOfTicksTarget = Math.max(
       1,
       Math.floor(height / pixelsPerLine)
     )
-    return scale.ticks(numberOfTicksTarget).map((value, index) => ({
-      value,
-      offset: scale(value),
-      key: `${value}-${index}`,
-    }))
+    return niceTicks(minValue, maxValue, numberOfTicksTarget).map(
+      (value, index) => ({
+        value,
+        offset: scale(value),
+        key: `${value}-${index}`,
+      })
+    )
   }, [height, maxValue, minValue])
   return (
     <g>

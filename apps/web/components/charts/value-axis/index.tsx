@@ -1,11 +1,10 @@
 "use client"
 
-import * as d3 from "d3"
 import { use, useMemo } from "react"
 import { MouseCoordsContext } from "../svg"
 import useChartData from "../use-chart-data"
 import useChartDisplay from "../use-chart-display"
-import { getCurrencyFormatter } from "../util"
+import { createLinearScale, getCurrencyFormatter, niceTicks } from "../util"
 import Legend from "./legend"
 
 export type ValueAxisProps = {
@@ -22,16 +21,13 @@ export default function ValueAxis({
   const formatCurrency = getCurrencyFormatter
 
   const ticks = useMemo(() => {
-    const scale = d3
-      .scaleLinear()
-      .domain([maxValue, minValue])
-      .range([0, height])
+    const scale = createLinearScale([maxValue, minValue], [0, height])
     // TODO: move pixelsPerTick to a reducer or context so it can be dynamic based on zoom level
     const numberOfTicksTarget = Math.max(
       1,
       Math.floor(height / pixelsPerTick)
     )
-    return scale.ticks(numberOfTicksTarget).map((value) => ({
+    return niceTicks(minValue, maxValue, numberOfTicksTarget).map((value) => ({
       value,
       offset: scale(value),
     }))
