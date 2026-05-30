@@ -1,4 +1,4 @@
-import { PayloadAction } from "@/types"
+import { Coords, PayloadAction } from "@/types"
 
 export type DisplayState = {
   candleFactor: number
@@ -24,7 +24,7 @@ export type DisplayAction =
       { dataLength: number; height: number; width: number }
     >
   | PayloadAction<"PAN", number>
-  | PayloadAction<"ZOOM", number>
+  | PayloadAction<"ZOOM", { delta: number; coords: Coords }>
 
 export const displayReducer = (
   state: DisplayState,
@@ -32,6 +32,7 @@ export const displayReducer = (
 ): DisplayState => {
   switch (action.type) {
     case "PAN": {
+      console.log("PAN")
       const nextOffset =
         state.offsetX - action.payload < state.minOffsetX
           ? state.minOffsetX
@@ -41,7 +42,7 @@ export const displayReducer = (
       return { ...state, offsetX: nextOffset }
     }
     case "RESIZE": {
-      console.log("REDUCER RESIZE")
+      console.log("RESIZE")
       const viewportWidth = action.payload.width - state.valueAxisWidth
       const columnWidth = viewportWidth / state.displayCandles
       const graphWidth = action.payload.dataLength * columnWidth
@@ -63,57 +64,20 @@ export const displayReducer = (
       }
     }
     case "ZOOM": {
-      const offsetX =
-        ((state.displayCandles + action.payload) * state.offsetX) /
-        state.displayCandles
-      // state.displayCandles + deltaX      =>    newOffsetX
-      // state.displayCandles               =>    state.offsetX
-      //
-
-      // const newDisplayCandles =
-
-      // if (action.payload > 0) {
-      //   return {
-      //     ...state,
-      //     offsetX: newOffsetX,
-      //     displayCandles:
-      //       state.displayCandles + action.payload <
-      //       state.maxDisplayCandles
-      //         ? state.displayCandles + action.payload
-      //         : state.maxDisplayCandles,
-      //   }
-      // } else {
-      //   return {
-      //     ...state,
-      //     displayCandles:
-      //       state.displayCandles + action.payload >
-      //       state.minDisplayCandles
-      //         ? state.displayCandles + action.payload
-      //         : state.minDisplayCandles,
-      //   }
-      // }
-
-      // const newOffsetX =
-      //   (action.zoom * state.offsetX * newDisplayCandles) /
-      //   state.displayCandles
-
-      // console.log(
-      //   "NEW OFFSETX",
-      //   offsetX,
-      //   action.payload,
-      //   state.displayCandles,
-      //   state.offsetX
-      // )
+      const delta =
+        action.payload.delta > 10
+          ? 10
+          : action.payload.delta < -10
+            ? -10
+            : action.payload.delta
 
       const displayCandles =
-        action.payload > 0
-          ? state.displayCandles + action.payload <
-            state.maxDisplayCandles
-            ? state.displayCandles + action.payload
+        delta > 0
+          ? state.displayCandles + delta < state.maxDisplayCandles
+            ? state.displayCandles + delta
             : state.maxDisplayCandles
-          : state.displayCandles + action.payload >
-              state.minDisplayCandles
-            ? state.displayCandles + action.payload
+          : state.displayCandles + delta > state.minDisplayCandles
+            ? state.displayCandles + delta
             : state.minDisplayCandles
 
       const columnWidth = state.viewportWidth / displayCandles
@@ -122,13 +86,31 @@ export const displayReducer = (
       const minOffsetX =
         state.viewportWidth - graphWidth - state.viewportWidth / 4
 
+      // 1. Get the mouse X position relative to the viewport container
+      const mouseX = action.payload.coords.x
+
+      // 2. Find where that mouse position sits relative to the unscaled graph
+      const graphAnchor = mouseX - state.offsetX
+
+      // 3. Calculate the exact scaling ratio between the new width and old width
+      const zoomRatio = graphWidth / state.graphWidth
+
+      // 4. Scale the graph position around the mouse cursor and clamp it to bounds
+      const rawOffsetX = mouseX - graphAnchor * zoomRatio
+      const offsetX = Math.max(
+        minOffsetX,
+        Math.min(maxOffsetX, rawOffsetX)
+      )
+
       return {
         ...state,
         displayCandles,
         columnWidth,
         candleWidth: columnWidth * state.candleFactor,
+        graphWidth,
         maxOffsetX,
         minOffsetX,
+        offsetX,
       }
     }
     default:

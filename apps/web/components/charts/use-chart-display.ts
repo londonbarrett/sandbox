@@ -1,4 +1,4 @@
-import { Dimensions } from "@/types"
+import { Coords, Dimensions } from "@/types"
 import { useCallback, use } from "react"
 import { DisplayContext } from "./display-provider"
 import useChartData from "./use-chart-data"
@@ -85,8 +85,8 @@ export default function useChartDisplay() {
 
   const zoom = useCallback(
     // TODO: When zooming, graph position should be locked at the position before zooming
-    (payload: number) => {
-      dispatch({ type: "ZOOM", payload })
+    (delta: number, coords: Coords) => {
+      dispatch({ type: "ZOOM", payload: { delta, coords } })
     },
     [dispatch]
   )

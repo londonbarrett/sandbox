@@ -28,7 +28,7 @@ export type SVGProps = {
   width?: number | string
 }
 
-const useMouseLock = (delay: number = 300) => {
+const useMouseLock = (delay: number = 2000) => {
   const timeout = useRef<ReturnType<typeof setTimeout>>(undefined)
   const [mouseLock, setValue] = useState<"PAN" | "ZOOM">()
   const setMouseLock = (deltaX: number, deltaY: number) => {
@@ -99,20 +99,20 @@ export default function SVG({
         if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
           pan(event.deltaX)
         } else {
-          zoom(event.deltaY)
+          zoom(event.deltaY, mouseCoords)
         }
       } else if (mouseMode === "BOTH") {
         pan(event.deltaX)
-        zoom(event.deltaY)
+        zoom(event.deltaY, mouseCoords)
       } else if (mouseMode === "LOCK") {
         if (mouseLock === "PAN") {
           pan(event.deltaX)
         } else {
-          zoom(event.deltaY)
+          zoom(event.deltaY, mouseCoords)
         }
       }
     },
-    [mouseLock, mouseMode, setMouseLock, pan, zoom]
+    [mouseCoords, mouseLock, mouseMode, setMouseLock, pan, zoom]
   )
 
   useEffect(
