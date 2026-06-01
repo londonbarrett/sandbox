@@ -1,28 +1,30 @@
 "use client"
 
 import { useMemo } from "react"
-import useChartData from "./use-chart-data"
 import useChartDisplay from "./use-chart-display"
 import { createLinearScale, niceTicks } from "./util"
 
 export default function Grid() {
-  const { height, viewportWidth } = useChartDisplay()
-  const { maxValue, minValue } = useChartData()
+  const { height, viewportWidth, visibleMin, visibleMax } =
+    useChartDisplay()
   const lines = useMemo(() => {
-    const scale = createLinearScale([maxValue, minValue], [0, height])
+    const scale = createLinearScale(
+      [visibleMax, visibleMin],
+      [0, height]
+    )
     const pixelsPerLine = 50
     const numberOfTicksTarget = Math.max(
       1,
       Math.floor(height / pixelsPerLine)
     )
-    return niceTicks(minValue, maxValue, numberOfTicksTarget).map(
+    return niceTicks(visibleMin, visibleMax, numberOfTicksTarget).map(
       (value, index) => ({
         value,
         offset: scale(value),
         key: `${value}-${index}`,
       })
     )
-  }, [height, maxValue, minValue])
+  }, [height, visibleMin, visibleMax])
   return (
     <g>
       {lines.map(({ offset, key }) => (

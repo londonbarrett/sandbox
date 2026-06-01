@@ -1,30 +1,68 @@
 import { Coords, Dimensions } from "@/types"
-import { useCallback, use } from "react"
+import { useCallback, use, useMemo } from "react"
 import { DisplayContext } from "./display-provider"
 import useChartData from "./use-chart-data"
 
 export default function useChartDisplay() {
   const { data, maxValue, minValue } = useChartData()
   const { ref, state, dispatch } = use(DisplayContext)
+  const { offsetX, columnWidth, viewportWidth, height } = state
+
+  const { visibleMin, visibleMax } = useMemo(() => {
+    if (data.length === 0 || columnWidth <= 0 || viewportWidth <= 0) {
+      return { visibleMin: minValue, visibleMax: maxValue }
+    }
+
+    const startIndex = Math.max(0, Math.floor(-offsetX / columnWidth))
+    const endIndex = Math.min(
+      data.length - 1,
+      Math.floor((-offsetX + viewportWidth) / columnWidth)
+    )
+
+    if (startIndex > endIndex) {
+      return { visibleMin: minValue, visibleMax: maxValue }
+    }
+
+    let vMin = Infinity
+    let vMax = -Infinity
+
+    for (let i = startIndex; i <= endIndex; i++) {
+      const candle = data[i]
+      if (candle) {
+        if (candle.low < vMin) vMin = candle.low
+        if (candle.high > vMax) vMax = candle.high
+      }
+    }
+
+    if (vMin === Infinity || vMax === -Infinity) {
+      return { visibleMin: minValue, visibleMax: maxValue }
+    }
+
+    const range = vMax - vMin
+    const padding = range * 0.05 || maxValue * 0.01 || 1
+
+    return {
+      visibleMin: vMin - padding,
+      visibleMax: vMax + padding,
+    }
+  }, [data, offsetX, columnWidth, viewportWidth, minValue, maxValue])
 
   const getCandleAt = useCallback(
     (x: number) => {
-      const i = Math.floor((x - state.offsetX) / state.columnWidth)
+      const i = Math.floor((x - offsetX) / columnWidth)
       return data[i]
     },
-    [data, state.columnWidth, state.offsetX]
+    [data, columnWidth, offsetX]
   )
 
-  // TODO: Find better naming for helper functions
   const getValueAt = useCallback(
     (y: number) => {
       const value =
-        (Math.abs(y - state.height) / state.height) *
-          (maxValue - minValue) +
-        minValue
+        (Math.abs(y - height) / height) * (visibleMax - visibleMin) +
+        visibleMin
       return value
     },
-    [state.height, maxValue, minValue]
+    [height, visibleMax, visibleMin]
   )
 
   const getXPosition = useCallback(
@@ -36,18 +74,18 @@ export default function useChartDisplay() {
 
   const getYCoord = useCallback(
     (value: number) =>
-      ((value - minValue) / (maxValue - minValue)) * state.height -
-      state.height,
-    [state.height, maxValue, minValue]
+      ((value - visibleMin) / (visibleMax - visibleMin)) * height -
+      height,
+    [height, visibleMax, visibleMin]
   )
 
   const getAbsYCoord = useCallback(
     (value: number) =>
       Math.abs(
-        ((value - minValue) / (maxValue - minValue)) * state.height -
-          state.height
+        ((value - visibleMin) / (visibleMax - visibleMin)) * height -
+          height
       ),
-    [state.height, maxValue, minValue]
+    [height, visibleMax, visibleMin]
   )
 
   const getYPosition = useCallback(
@@ -101,5 +139,7 @@ export default function useChartDisplay() {
     pan,
     resize,
     zoom,
+    visibleMin,
+    visibleMax,
   }
 }

@@ -16,13 +16,14 @@ export const getCurrencyFormatter = (
   return Intl.NumberFormat("en-US", options).format(value)
 }
 
-export async function fetchTenThousandCandles() {
+export async function fetchTenThousandCandles(
+  targetCount: number = 1000
+) {
   // 1. Initialize exchange with rate limiter enabled
   const exchange = new ccxt.binance({ enableRateLimit: true })
 
   const symbol = "BTC/USDT"
   const timeframe = "1h"
-  const targetCount = 2000
   const limitPerRequest = 1000 // Max allowed by Binance per call
 
   // 2. Initialize the result array with the proper CCXT type

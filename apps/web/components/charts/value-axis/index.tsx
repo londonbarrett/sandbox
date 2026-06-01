@@ -2,9 +2,12 @@
 
 import { use, useMemo } from "react"
 import { MouseCoordsContext } from "../svg"
-import useChartData from "../use-chart-data"
 import useChartDisplay from "../use-chart-display"
-import { createLinearScale, getCurrencyFormatter, niceTicks } from "../util"
+import {
+  createLinearScale,
+  getCurrencyFormatter,
+  niceTicks,
+} from "../util"
 import Legend from "./legend"
 
 export type ValueAxisProps = {
@@ -14,24 +17,33 @@ export type ValueAxisProps = {
 export default function ValueAxis({
   pixelsPerTick = 50,
 }: ValueAxisProps) {
-  const { maxValue, minValue } = useChartData()
-  const { height, valueAxisWidth, viewportWidth, getValueAt } =
-    useChartDisplay()
+  const {
+    height,
+    valueAxisWidth,
+    viewportWidth,
+    getValueAt,
+    visibleMin,
+    visibleMax,
+  } = useChartDisplay()
   const mouseCoords = use(MouseCoordsContext)
   const formatCurrency = getCurrencyFormatter
 
   const ticks = useMemo(() => {
-    const scale = createLinearScale([maxValue, minValue], [0, height])
-    // TODO: move pixelsPerTick to a reducer or context so it can be dynamic based on zoom level
+    const scale = createLinearScale(
+      [visibleMax, visibleMin],
+      [0, height]
+    )
     const numberOfTicksTarget = Math.max(
       1,
       Math.floor(height / pixelsPerTick)
     )
-    return niceTicks(minValue, maxValue, numberOfTicksTarget).map((value) => ({
-      value,
-      offset: scale(value),
-    }))
-  }, [height, maxValue, minValue, pixelsPerTick])
+    return niceTicks(visibleMin, visibleMax, numberOfTicksTarget).map(
+      (value) => ({
+        value,
+        offset: scale(value),
+      })
+    )
+  }, [height, visibleMin, visibleMax, pixelsPerTick])
 
   return (
     <g transform={`translate(${viewportWidth})`}>

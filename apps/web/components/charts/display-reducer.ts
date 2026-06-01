@@ -58,12 +58,13 @@ export const displayReducer = (
         height: action.payload.height,
         maxOffsetX,
         minOffsetX,
-        offsetX: maxOffsetX,
+        offsetX: minOffsetX,
         viewportWidth,
         width: action.payload.width,
       }
     }
     case "ZOOM": {
+      console.log("ZOOM", state.graphWidth)
       const delta =
         action.payload.delta > 10
           ? 10

@@ -2,7 +2,6 @@ import Chart from "@/components/charts/chart"
 import Grid from "@/components/charts/grid"
 import Graph from "@/components/charts/graph"
 import ccxt from "ccxt"
-import data from "@/components/charts/2000.json"
 import CrossHair from "@/components/charts/cross-hair"
 import Status from "@/components/charts/status"
 import Symbol from "@/components/charts/symbol"
@@ -37,13 +36,23 @@ const extractor = (
   }
 }
 
-export default async function Page() {
-  // const long = await fetchTenThousandCandles()
-  // console.log(long)
-  // const write = fs.writeFileSync("long.json", JSON.stringify(long, null, 2))
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+
+  let fileData: Array<Array<number | undefined>> = []
+  try {
+    fileData = (await import(`@/components/charts/${id}.json`)).default
+  } catch (error) {
+    console.error(`Unable to load data for id="${id}"`, error)
+  }
+
   return (
     <div className="flex h-full flex-col p-6">
-      <Chart data={data.map(extractor)} height="600" width="100%">
+      <Chart data={fileData.map(extractor)} height="600" width="100%">
         <Grid />
         <Symbol symbol="BTC/USD" interval="1h" />
         <Graph />

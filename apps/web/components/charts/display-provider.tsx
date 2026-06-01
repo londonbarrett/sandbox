@@ -9,7 +9,7 @@ const initialState = {
   candleFactor: 0.8,
   candleWidth: 0,
   columnWidth: 0,
-  displayCandles: 100,
+  displayCandles: 200,
   dataLength: 0,
   graphWidth: 0,
   height: 0,
