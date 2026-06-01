@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "fetchbtc": "node ./components/charts/fetch-btc.ts"
   },
   "dependencies": {
     "@workspace/ui": "workspace:*",
