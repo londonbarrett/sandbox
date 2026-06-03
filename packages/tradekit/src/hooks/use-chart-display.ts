@@ -1,6 +1,6 @@
-import { Coords, Dimensions } from "@/types"
+import { ChartCoords, Dimensions } from "../types"
 import { useCallback, use, useMemo } from "react"
-import { DisplayContext } from "./display-provider"
+import { DisplayContext } from "../display-provider"
 import useChartData from "./use-chart-data"
 
 export default function useChartDisplay() {
@@ -107,7 +107,6 @@ export default function useChartDisplay() {
   const resize = useCallback(
     (dimensions: Dimensions) => {
       if (data.length > 0) {
-        console.log("USE DIMENSIONS RESIZE")
         dispatch({
           type: "RESIZE",
           payload: {
@@ -122,8 +121,7 @@ export default function useChartDisplay() {
   )
 
   const zoom = useCallback(
-    // TODO: When zooming, graph position should be locked at the position before zooming
-    (delta: number, coords: Coords) => {
+    (delta: number, coords: ChartCoords) => {
       dispatch({ type: "ZOOM", payload: { delta, coords } })
     },
     [dispatch]

@@ -1,0 +1,25 @@
+:root {
+  --chart-bg: #ffffff;
+  --chart-bull: #22c55e;
+  --chart-bull-stroke: #16a34a;
+  --chart-bear: #ef4444;
+  --chart-bear-stroke: #dc2626;
+  --chart-grid: rgba(0, 0, 0, 0.08);
+  --chart-crosshair: rgba(0, 0, 0, 0.25);
+  --chart-axis: #94a3b8;
+  --chart-label: #334155;
+  --chart-watermark: rgba(0, 0, 0, 0.05);
+}
+
+.dark {
+  --chart-bg: #0c162d;
+  --chart-bull: oklch(84.341% 0.16251 171.336);
+  --chart-bull-stroke: oklch(52.785% 0.08903 201.953);
+  --chart-bear: #ff6464;
+  --chart-bear-stroke: #dc2626;
+  --chart-grid: rgba(148, 163, 184, 0.15);
+  --chart-crosshair: rgba(255, 255, 255, 0.25);
+  --chart-axis: #475569;
+  --chart-label: #f8fafc;
+  --chart-watermark: rgba(255, 255, 255, 0.06);
+}

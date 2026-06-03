@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@workspace/ui"],
-  experimental: {
-    serverComponentsExternalPackages: ["ccxt"],
-  },
+  transpilePackages: ["@workspace/ui", "react-tradekit"],
+  serverExternalPackages: ["ccxt"],
 }
 
 export default nextConfig

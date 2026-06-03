@@ -1,64 +1,34 @@
-"use client"
+import useChartDisplay from "./hooks/use-chart-display"
+import useMouseCoords from "./hooks/use-mouse-coords"
+import useMouseLock from "./hooks/use-mouse-lock"
 
-import { Coords } from "@/types"
 import {
-  createContext,
   MouseEvent,
   ReactNode,
   RefObject,
-  // TouchEvent,
   useCallback,
   useEffect,
-  useRef,
   useState,
 } from "react"
-import useChartDisplay from "./use-chart-display"
 
-// TODO: Move to a separate file?
-export const MouseCoordsContext = createContext<Coords>({
-  candle: undefined,
-  x: 0,
-  y: 0,
-})
-
-export type SVGProps = {
+type ChartSVGProps = {
   children: ReactNode
+  className?: string
   height?: number | string
   ref: RefObject<SVGSVGElement | null>
   width?: number | string
 }
 
-const useMouseLock = (delay: number = 2000) => {
-  const timeout = useRef<ReturnType<typeof setTimeout>>(undefined)
-  const [mouseLock, setValue] = useState<"PAN" | "ZOOM">()
-  const setMouseLock = (deltaX: number, deltaY: number) => {
-    if (!mouseLock) {
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        setValue("PAN")
-      } else {
-        setValue("ZOOM")
-      }
-      timeout.current = setTimeout(() => {
-        setValue(undefined)
-      }, delay)
-    }
-  }
-  return { mouseLock, setMouseLock }
-}
-
-export default function SVG({
+export default function ChartSVG({
   children,
+  className,
   height = "100%",
   ref,
   width = "100%",
-}: SVGProps) {
+}: ChartSVGProps) {
   const { mouseLock, setMouseLock } = useMouseLock()
   const { getCandleAt, pan, resize, zoom } = useChartDisplay()
-  const [mouseCoords, setMouseCoords] = useState<Coords>({
-    candle: undefined,
-    x: 0,
-    y: 0,
-  })
+  const { coords, setCoords } = useMouseCoords()
 
   const mouseMoveHandler = useCallback(
     (event: MouseEvent<SVGSVGElement>) => {
@@ -67,28 +37,11 @@ export default function SVG({
         const x = event.clientX - rect.left
         const y = event.clientY - rect.top
         const candle = getCandleAt(x)
-        setMouseCoords({ candle, x, y })
+        setCoords({ candle, x, y })
       }
     },
     [getCandleAt, ref]
   )
-
-  // const touchMoveHandler = useCallback(
-  //   (event: TouchEvent<SVGSVGElement>) => {
-  //     if (event.touches.length > 0) {
-  //       const touch = event.touches[0]
-  //       if (touch) {
-  //         const rect = ref.current?.getBoundingClientRect()
-  //         if (rect) {
-  //           const x = touch.clientX - rect.left
-  //           const y = touch.clientY - rect.top
-  //           setMouseCoords({ x, y })
-  //         }
-  //       }
-  //     }
-  //   },
-  //   [ref]
-  // )
 
   const [mouseMode] = useState<"BOTH" | "LOCK" | "SPLIT">("BOTH")
   const wheelHandler = useCallback(
@@ -99,20 +52,20 @@ export default function SVG({
         if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
           pan(event.deltaX)
         } else {
-          zoom(event.deltaY, mouseCoords)
+          zoom(event.deltaY, coords)
         }
       } else if (mouseMode === "BOTH") {
         pan(event.deltaX)
-        zoom(event.deltaY, mouseCoords)
+        zoom(event.deltaY, coords)
       } else if (mouseMode === "LOCK") {
         if (mouseLock === "PAN") {
           pan(event.deltaX)
         } else {
-          zoom(event.deltaY, mouseCoords)
+          zoom(event.deltaY, coords)
         }
       }
     },
-    [mouseCoords, mouseLock, mouseMode, setMouseLock, pan, zoom]
+    [coords, mouseLock, mouseMode, setMouseLock, pan, zoom]
   )
 
   useEffect(
@@ -152,18 +105,16 @@ export default function SVG({
   }, [ref, wheelHandler])
 
   return (
-    <MouseCoordsContext value={mouseCoords}>
-      <svg
-        className="touch-pan-y touch-none overscroll-x-none bg-blue-950"
-        height={height}
-        onMouseMove={mouseMoveHandler}
-        // onTouchMove={touchMoveHandler}
-        ref={ref}
-        shapeRendering="crispEdges"
-        width={width}
-      >
-        {children}
-      </svg>
-    </MouseCoordsContext>
+    <svg
+      className={className}
+      height={height}
+      onMouseMove={mouseMoveHandler}
+      ref={ref}
+      shapeRendering="crispEdges"
+      style={{ backgroundColor: "var(--chart-bg)" }}
+      width={width}
+    >
+      {children}
+    </svg>
   )
 }

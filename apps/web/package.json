@@ -13,6 +13,7 @@
     "fetchbtc": "node ./components/charts/fetch-btc.ts"
   },
   "dependencies": {
+    "react-tradekit": "workspace:*",
     "@workspace/ui": "workspace:*",
     "ccxt": "^4.5.52",
     "clsx": "^2.1.1",

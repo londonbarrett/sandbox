@@ -1,11 +1,13 @@
-import Chart from "@/components/charts/chart"
-import Grid from "@/components/charts/grid"
-import Graph from "@/components/charts/graph"
+import {
+  CandleChart,
+  CandleChartCandle,
+  CandleChartGrid,
+  CandleChartCrosshair,
+  CandleChartStatus,
+  CandleChartSymbol,
+  CandleChartAxis,
+} from "react-tradekit"
 import ccxt from "ccxt"
-import CrossHair from "@/components/charts/cross-hair"
-import Status from "@/components/charts/status"
-import Symbol from "@/components/charts/symbol"
-import ValueAxis from "@/components/charts/value-axis"
 
 export const fetchOHLCV = async () => {
   const exchange = new ccxt.coinbase({ enableRateLimit: true })
@@ -45,21 +47,21 @@ export default async function Page({
 
   let fileData: Array<Array<number | undefined>> = []
   try {
-    fileData = (await import(`@/components/charts/${id}.json`)).default
+    fileData = (await import(`@/data/${id}.json`)).default
   } catch (error) {
     console.error(`Unable to load data for id="${id}"`, error)
   }
 
   return (
     <div className="flex h-full flex-col p-6">
-      <Chart data={fileData.map(extractor)} height="600" width="100%">
-        <Grid />
-        <Symbol symbol="BTC/USD" interval="1h" />
-        <Graph />
-        <CrossHair />
-        <Status showIndex symbol="BTC/USD" interval="1h" />
-        <ValueAxis />
-      </Chart>
+      <CandleChart data={fileData.map(extractor)} height="600" width="100%">
+        <CandleChartGrid />
+        <CandleChartSymbol symbol="BTC/USD" interval="1h" />
+        <CandleChartCandle />
+        <CandleChartCrosshair />
+        <CandleChartStatus showIndex symbol="BTC/USD" interval="1h" />
+        <CandleChartAxis />
+      </CandleChart>
     </div>
   )
 }

@@ -1,14 +1,24 @@
 "use client"
 
 import { useMemo } from "react"
-import useChartData from "./use-chart-data"
-import useChartDisplay from "./use-chart-display"
+import useChartData from "./hooks/use-chart-data"
+import useChartDisplay from "./hooks/use-chart-display"
 
-// TODO: This conponent should be named OHLCV
-export default function Graph() {
+export type CandleChartCandleProps = {
+  className?: string
+}
+
+export default function ChartCandles({
+  className,
+}: CandleChartCandleProps) {
   const { data } = useChartData()
-  const { candleWidth, columnWidth, getAbsYCoord, offsetX, viewportWidth } =
-    useChartDisplay()
+  const {
+    candleWidth,
+    columnWidth,
+    getAbsYCoord,
+    offsetX,
+    viewportWidth,
+  } = useChartDisplay()
 
   const { bullishPath, bearishPath } = useMemo(() => {
     if (columnWidth <= 0 || viewportWidth <= 0 || data.length === 0) {
@@ -29,7 +39,6 @@ export default function Graph() {
 
     for (let i = startIndex; i <= endIndex; i++) {
       const candle = data[i]
-
       if (!candle) continue
 
       const up = candle.close > candle.open
@@ -58,23 +67,38 @@ export default function Graph() {
     }
 
     return { bullishPath: bullD, bearishPath: bearD }
-  }, [data, candleWidth, columnWidth, getAbsYCoord, offsetX, viewportWidth])
+  }, [
+    data,
+    candleWidth,
+    columnWidth,
+    getAbsYCoord,
+    offsetX,
+    viewportWidth,
+  ])
 
   return (
-    <>
+    <g className={className}>
       {bullishPath && (
         <path
           d={bullishPath}
-          className="fill-teal-400 stroke-teal-700 stroke-1 transform-content"
+          style={{
+            fill: "var(--chart-bull)",
+            stroke: "var(--chart-bull-stroke)",
+            strokeWidth: 1,
+          }}
         />
       )}
 
       {bearishPath && (
         <path
           d={bearishPath}
-          className="fill-rose-400 stroke-rose-700 stroke-1 transform-content"
+          style={{
+            fill: "var(--chart-bear)",
+            stroke: "var(--chart-bear-stroke)",
+            strokeWidth: 1,
+          }}
         />
       )}
-    </>
+    </g>
   )
 }

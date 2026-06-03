@@ -7,6 +7,7 @@ import {
 } from "@workspace/ui/components/sidebar"
 import { TooltipProvider } from "@workspace/ui/components/tooltip"
 import "@workspace/ui/globals.css"
+import "react-tradekit/globals.css"
 import { cn } from "@workspace/ui/lib/utils"
 import { Geist_Mono, Oxanium } from "next/font/google"
 

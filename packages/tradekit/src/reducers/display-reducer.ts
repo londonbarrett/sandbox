@@ -1,4 +1,4 @@
-import { Coords, PayloadAction } from "@/types"
+import { ChartCoords, PayloadAction } from "../types"
 
 export type DisplayState = {
   candleFactor: number
@@ -24,7 +24,7 @@ export type DisplayAction =
       { dataLength: number; height: number; width: number }
     >
   | PayloadAction<"PAN", number>
-  | PayloadAction<"ZOOM", { delta: number; coords: Coords }>
+  | PayloadAction<"ZOOM", { delta: number; coords: ChartCoords }>
 
 export const displayReducer = (
   state: DisplayState,
@@ -32,7 +32,6 @@ export const displayReducer = (
 ): DisplayState => {
   switch (action.type) {
     case "PAN": {
-      console.log("PAN")
       const nextOffset =
         state.offsetX - action.payload < state.minOffsetX
           ? state.minOffsetX
@@ -42,15 +41,13 @@ export const displayReducer = (
       return { ...state, offsetX: nextOffset }
     }
     case "RESIZE": {
-      console.log("RESIZE")
       const viewportWidth = action.payload.width - state.valueAxisWidth
       const columnWidth = viewportWidth / state.displayCandles
       const graphWidth = action.payload.dataLength * columnWidth
-      const maxOffsetX = viewportWidth / 4
-      const minOffsetX = viewportWidth - graphWidth - viewportWidth / 4
+      const maxOffsetX = 0
+      const minOffsetX = Math.min(0, viewportWidth - graphWidth)
       return {
         ...state,
-        // TODO: Candle Scale factor should be in a config object
         candleWidth: columnWidth * state.candleFactor,
         columnWidth,
         dataLength: action.payload.dataLength,
@@ -64,7 +61,6 @@ export const displayReducer = (
       }
     }
     case "ZOOM": {
-      console.log("ZOOM", state.graphWidth)
       const delta =
         action.payload.delta > 10
           ? 10
@@ -72,31 +68,27 @@ export const displayReducer = (
             ? -10
             : action.payload.delta
 
+      const effectiveMax = Math.min(
+        state.maxDisplayCandles,
+        state.dataLength
+      )
       const displayCandles =
         delta > 0
-          ? state.displayCandles + delta < state.maxDisplayCandles
+          ? state.displayCandles + delta < effectiveMax
             ? state.displayCandles + delta
-            : state.maxDisplayCandles
+            : effectiveMax
           : state.displayCandles + delta > state.minDisplayCandles
             ? state.displayCandles + delta
             : state.minDisplayCandles
 
       const columnWidth = state.viewportWidth / displayCandles
       const graphWidth = state.dataLength * columnWidth
-      const maxOffsetX = state.viewportWidth / 4
-      const minOffsetX =
-        state.viewportWidth - graphWidth - state.viewportWidth / 4
+      const maxOffsetX = 0
+      const minOffsetX = Math.min(0, state.viewportWidth - graphWidth)
 
-      // 1. Get the mouse X position relative to the viewport container
       const mouseX = action.payload.coords.x
-
-      // 2. Find where that mouse position sits relative to the unscaled graph
       const graphAnchor = mouseX - state.offsetX
-
-      // 3. Calculate the exact scaling ratio between the new width and old width
       const zoomRatio = graphWidth / state.graphWidth
-
-      // 4. Scale the graph position around the mouse cursor and clamp it to bounds
       const rawOffsetX = mouseX - graphAnchor * zoomRatio
       const offsetX = Math.max(
         minOffsetX,

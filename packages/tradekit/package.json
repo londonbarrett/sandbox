@@ -1,0 +1,62 @@
+{
+  "name": "react-tradekit",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "A candlestick chart component library for React",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anomalyco/react-tradekit.git"
+  },
+  "keywords": [
+    "react",
+    "candlestick",
+    "chart",
+    "trading",
+    "finance",
+    "ohlcv"
+  ],
+  "sideEffects": [
+    "src/globals.css"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm build"
+  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./globals.css": "./src/globals.css"
+  },
+  "publishConfig": {
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "./globals.css": "./src/globals.css"
+    }
+  },
+  "files": [
+    "dist",
+    "src/globals.css"
+  ],
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "eslint": "^9.39.2",
+    "typescript": "^5.9.3"
+  }
+}

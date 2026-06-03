@@ -1,15 +1,21 @@
 "use client"
 
-import { createContext, Dispatch, ReactNode, useEffect, useReducer } from "react"
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  useEffect,
+  useReducer,
+} from "react"
 import {
   DataAction,
   dataReducer,
   DataState,
-  setData
-} from "./data-reducer"
-import { Candle } from "@/types"
+  setData,
+} from "./reducers/data-reducer"
+import { Candle } from "./types"
 
-const initialState = {
+const initialState: DataState = {
   data: [],
   maxValue: 0,
   minValue: 0,
@@ -25,7 +31,10 @@ export type DataProviderProps = {
   data: Candle[]
 }
 
-export default function DataProvider({ children, data }: DataProviderProps) {
+export default function DataProvider({
+  children,
+  data,
+}: DataProviderProps) {
   const [state, dispatch] = useReducer(dataReducer, initialState)
 
   useEffect(

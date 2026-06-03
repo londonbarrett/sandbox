@@ -1,4 +1,4 @@
-import { Candle, PayloadAction } from "@/types"
+import { Candle, PayloadAction } from "../types"
 
 export type DataState = {
   data: Candle[]
