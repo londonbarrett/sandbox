@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useMemo } from "react"
-import useChartData from "./hooks/use-chart-data"
-import useChartDisplay from "./hooks/use-chart-display"
-import { ema } from "./calculations"
+import useChartData from "../hooks/use-chart-data"
+import useChartDisplay from "../hooks/use-chart-display"
+import { ema } from "../calculations"
 
 export type EMAGraphProps = {
   className?: string

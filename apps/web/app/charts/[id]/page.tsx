@@ -1,14 +1,14 @@
+import ccxt from "ccxt"
 import {
   Chart,
-  CandleChartGrid,
-  CandleChartCrosshair,
-  CandleChartStatus,
-  CandleChartSymbol,
-  CandleChartAxis,
-  PriceGraph,
+  Crosshair,
   EMAGraph,
+  Grid,
+  PriceGraph,
+  Status,
+  Symbol,
+  ValueAxis,
 } from "react-tradekit"
-import ccxt from "ccxt"
 
 export const fetchOHLCV = async () => {
   const exchange = new ccxt.coinbase({ enableRateLimit: true })
@@ -56,14 +56,19 @@ export default async function Page({
   return (
     <div className="flex h-full flex-col p-6">
       <Chart data={fileData.map(extractor)} height="600" width="100%">
-        <CandleChartGrid />
-        <CandleChartSymbol symbol="BTC/USD" interval="1h" />
+        <Grid />
+        <Symbol symbol="BTC/USD" interval="1h" />
         <EMAGraph period={200} />
         <EMAGraph color="#34f56e" period={50} />
         <PriceGraph />
-        <CandleChartCrosshair />
-        <CandleChartStatus showIndex showIndicators symbol="BTC/USD" interval="1h" />
-        <CandleChartAxis />
+        <Crosshair />
+        <Status
+          showIndex
+          showIndicators
+          symbol="BTC/USD"
+          interval="1h"
+        />
+        <ValueAxis />
       </Chart>
     </div>
   )

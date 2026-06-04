@@ -1,11 +1,11 @@
 "use client"
 
 import { useMemo } from "react"
-import useChartData from "./hooks/use-chart-data"
-import useMouseCoords from "./hooks/use-mouse-coords"
-import { getCurrencyFormatter } from "./util"
+import useChartData from "../hooks/use-chart-data"
+import useMouseCoords from "../hooks/use-mouse-coords"
+import { getCurrencyFormatter } from "../util"
 
-export type CandleChartStatusProps = {
+export type StatusProps = {
   className?: string
   symbol: string
   interval: string
@@ -17,13 +17,13 @@ function formatIndicatorKey(key: string): string {
   return key.toUpperCase()
 }
 
-export default function CandleChartStatus({
+export default function Status({
   className,
   symbol,
   interval,
   showIndex = false,
   showIndicators = false,
-}: CandleChartStatusProps) {
+}: StatusProps) {
   const { coords } = useMouseCoords()
   const { indicators } = useChartData()
   const formatCurrency = getCurrencyFormatter

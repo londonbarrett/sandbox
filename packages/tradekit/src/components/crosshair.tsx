@@ -1,15 +1,13 @@
 "use client"
 
-import useChartDisplay from "./hooks/use-chart-display"
-import useMouseCoords from "./hooks/use-mouse-coords"
+import useChartDisplay from "../hooks/use-chart-display"
+import useMouseCoords from "../hooks/use-mouse-coords"
 
-export type CandleChartCrosshairProps = {
+export type CrosshairProps = {
   className?: string
 }
 
-export default function CandleChartCrosshair({
-  className,
-}: CandleChartCrosshairProps) {
+export default function Crosshair({ className }: CrosshairProps) {
   const { coords } = useMouseCoords()
   const { columnWidth, height, viewportWidth, offsetX } =
     useChartDisplay()

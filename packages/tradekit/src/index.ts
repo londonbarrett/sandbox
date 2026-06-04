@@ -1,28 +1,25 @@
-export { default as CandleChart } from "./components/chart"
-export type { ChartProps as CandleChartProps } from "./components/chart"
-
 export { default as Chart } from "./components/chart"
 export type { ChartProps } from "./components/chart"
 
-export { default as CandleChartGrid } from "./chart-grid"
-export type { CandleChartGridProps } from "./chart-grid"
+export { default as Grid } from "./components/grid"
+export type { GridProps } from "./components/grid"
 
-export { default as CandleChartCrosshair } from "./chart-crosshair"
-export type { CandleChartCrosshairProps } from "./chart-crosshair"
+export { default as Crosshair } from "./components/crosshair"
+export type { CrosshairProps } from "./components/crosshair"
 
-export { default as CandleChartStatus } from "./chart-status"
-export type { CandleChartStatusProps } from "./chart-status"
+export { default as Status } from "./components/status"
+export type { StatusProps } from "./components/status"
 
-export { default as CandleChartSymbol } from "./chart-symbol"
-export type { CandleChartSymbolProps } from "./chart-symbol"
+export { default as Symbol } from "./components/symbol"
+export type { SymbolProps } from "./components/symbol"
 
-export { default as CandleChartAxis } from "./chart-axis"
-export type { CandleChartAxisProps } from "./chart-axis"
+export { default as ValueAxis } from "./components/value-axis"
+export type { ValueAxisProps } from "./components/value-axis"
 
-export { default as PriceGraph } from "./price-graph"
-export type { PriceGraphProps } from "./price-graph"
+export { default as PriceGraph } from "./components/price-graph"
+export type { PriceGraphProps } from "./components/price-graph"
 
-export { default as EMAGraph } from "./ema-graph"
-export type { EMAGraphProps } from "./ema-graph"
+export { default as EMAGraph } from "./components/ema-graph"
+export type { EMAGraphProps } from "./components/ema-graph"
 
 export { ema } from "./calculations"

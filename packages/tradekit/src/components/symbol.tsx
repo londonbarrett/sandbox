@@ -1,19 +1,19 @@
 "use client"
 
 import { memo } from "react"
-import useChatDisplay from "./hooks/use-chart-display"
+import useChatDisplay from "../hooks/use-chart-display"
 
-export type CandleChartSymbolProps = {
+export type SymbolProps = {
   className?: string
   symbol: string
   interval: string
 }
 
-export default memo(function CandleChartSymbol({
+export default memo(function Symbol({
   className,
   symbol,
   interval,
-}: CandleChartSymbolProps) {
+}: SymbolProps) {
   const { valueAxisWidth } = useChatDisplay()
 
   return (
@@ -23,6 +23,7 @@ export default memo(function CandleChartSymbol({
         fill: "var(--chart-watermark)",
         fontSize: "clamp(1.5rem, 5vw, 4.5rem)",
         fontWeight: 700,
+        userSelect: "none",
       }}
       textAnchor="middle"
       dominantBaseline="middle"

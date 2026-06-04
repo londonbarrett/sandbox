@@ -1,8 +1,8 @@
 "use client"
 
 import { useMemo } from "react"
-import useChartData from "./hooks/use-chart-data"
-import useChartDisplay from "./hooks/use-chart-display"
+import useChartData from "../hooks/use-chart-data"
+import useChartDisplay from "../hooks/use-chart-display"
 
 export type PriceGraphProps = {
   className?: string

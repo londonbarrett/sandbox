@@ -1,23 +1,23 @@
 "use client"
 
 import { useMemo } from "react"
-import useChartDisplay from "./hooks/use-chart-display"
-import useMouseCoords from "./hooks/use-mouse-coords"
+import useChartDisplay from "../hooks/use-chart-display"
+import useMouseCoords from "../hooks/use-mouse-coords"
 import {
   createLinearScale,
   getCurrencyFormatter,
   niceTicks,
-} from "./util"
+} from "../util"
 
-export type CandleChartAxisProps = {
+export type ValueAxisProps = {
   className?: string
   pixelsPerTick?: number
 }
 
-export default function CandleChartAxis({
+export default function ValueAxis({
   className,
   pixelsPerTick = 50,
-}: CandleChartAxisProps) {
+}: ValueAxisProps) {
   const {
     height,
     valueAxisWidth,

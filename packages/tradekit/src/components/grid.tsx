@@ -1,16 +1,14 @@
 "use client"
 
 import { useMemo } from "react"
-import useChartDisplay from "./hooks/use-chart-display"
-import { createLinearScale, niceTicks } from "./util"
+import useChartDisplay from "../hooks/use-chart-display"
+import { createLinearScale, niceTicks } from "../util"
 
-export type CandleChartGridProps = {
+export type GridProps = {
   className?: string
 }
 
-export default function CandleChartGrid({
-  className,
-}: CandleChartGridProps) {
+export default function Grid({ className }: GridProps) {
   const { height, viewportWidth, visibleMin, visibleMax } =
     useChartDisplay()
   const lines = useMemo(() => {
