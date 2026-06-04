@@ -1,11 +1,12 @@
 import {
-  CandleChart,
-  CandleChartCandle,
+  Chart,
   CandleChartGrid,
   CandleChartCrosshair,
   CandleChartStatus,
   CandleChartSymbol,
   CandleChartAxis,
+  PriceGraph,
+  EMAGraph,
 } from "react-tradekit"
 import ccxt from "ccxt"
 
@@ -54,14 +55,16 @@ export default async function Page({
 
   return (
     <div className="flex h-full flex-col p-6">
-      <CandleChart data={fileData.map(extractor)} height="600" width="100%">
+      <Chart data={fileData.map(extractor)} height="600" width="100%">
         <CandleChartGrid />
         <CandleChartSymbol symbol="BTC/USD" interval="1h" />
-        <CandleChartCandle />
+        <EMAGraph period={200} />
+        <EMAGraph color="#34f56e" period={50} />
+        <PriceGraph />
         <CandleChartCrosshair />
-        <CandleChartStatus showIndex symbol="BTC/USD" interval="1h" />
+        <CandleChartStatus showIndex showIndicators symbol="BTC/USD" interval="1h" />
         <CandleChartAxis />
-      </CandleChart>
+      </Chart>
     </div>
   )
 }

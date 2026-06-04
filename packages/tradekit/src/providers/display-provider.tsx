@@ -5,7 +5,7 @@ import {
   DisplayAction,
   displayReducer,
   DisplayState,
-} from "./reducers/display-reducer"
+} from "../reducers/display-reducer"
 
 const initialState: DisplayState = {
   candleFactor: 0.8,

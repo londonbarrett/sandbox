@@ -1,5 +1,7 @@
 "use client"
 
+import { useMemo } from "react"
+import useChartData from "./hooks/use-chart-data"
 import useMouseCoords from "./hooks/use-mouse-coords"
 import { getCurrencyFormatter } from "./util"
 
@@ -8,6 +10,11 @@ export type CandleChartStatusProps = {
   symbol: string
   interval: string
   showIndex?: boolean
+  showIndicators?: boolean
+}
+
+function formatIndicatorKey(key: string): string {
+  return key.toUpperCase()
 }
 
 export default function CandleChartStatus({
@@ -15,9 +22,21 @@ export default function CandleChartStatus({
   symbol,
   interval,
   showIndex = false,
+  showIndicators = false,
 }: CandleChartStatusProps) {
   const { coords } = useMouseCoords()
+  const { indicators } = useChartData()
   const formatCurrency = getCurrencyFormatter
+
+  const indicatorEntries = useMemo(() => {
+    if (!showIndicators || !coords.candle) return []
+
+    return Object.entries(indicators).flatMap(([key, values]) => {
+      const value = values[coords.candle!.index]
+      if (value === null || value === undefined) return []
+      return [`${formatIndicatorKey(key)}: ${formatCurrency(value)}`]
+    })
+  }, [showIndicators, coords.candle, indicators, formatCurrency])
 
   return (
     <g
@@ -49,6 +68,8 @@ export default function CandleChartStatus({
             {formatCurrency(coords.candle.high)} L:{" "}
             {formatCurrency(coords.candle.low)} C:{" "}
             {formatCurrency(coords.candle.close)}
+            {indicatorEntries.length > 0 &&
+              ` ${indicatorEntries.join(" ")}`}
           </tspan>
         ) : (
           <tspan>{showIndex && `i: -- O: -- H: -- L: -- C: --`}</tspan>

@@ -2,12 +2,12 @@
 
 import { ReactNode, useRef } from "react"
 import ChartController from "./chart-controller"
-import DataProvider from "./data-provider"
-import DisplayProvider from "./display-provider"
-import { Candle } from "./types"
-import MouseCoordsProvider from "./mouse-coords-provider"
+import DataProvider from "../providers/data-provider"
+import DisplayProvider from "../providers/display-provider"
+import { Candle } from "../types"
+import MouseCoordsProvider from "../providers/mouse-coords-provider"
 
-export type CandleChartProps = {
+export type ChartProps = {
   children: ReactNode
   className?: string
   data: Candle[]
@@ -15,13 +15,13 @@ export type CandleChartProps = {
   width?: number | string
 }
 
-export default function CandleChart({
+export default function Chart({
   children,
   className,
   data,
   height = "100%",
   width = "100%",
-}: CandleChartProps) {
+}: ChartProps) {
   const ref = useRef<SVGSVGElement | null>(null)
 
   return (

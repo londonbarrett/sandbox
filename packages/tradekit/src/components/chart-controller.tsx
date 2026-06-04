@@ -1,6 +1,6 @@
-import useChartDisplay from "./hooks/use-chart-display"
-import useMouseCoords from "./hooks/use-mouse-coords"
-import useMouseLock from "./hooks/use-mouse-lock"
+import useChartDisplay from "../hooks/use-chart-display"
+import useMouseCoords from "../hooks/use-mouse-coords"
+import useMouseLock from "../hooks/use-mouse-lock"
 
 import {
   MouseEvent,

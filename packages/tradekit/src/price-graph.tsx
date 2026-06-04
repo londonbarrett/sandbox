@@ -4,13 +4,11 @@ import { useMemo } from "react"
 import useChartData from "./hooks/use-chart-data"
 import useChartDisplay from "./hooks/use-chart-display"
 
-export type CandleChartCandleProps = {
+export type PriceGraphProps = {
   className?: string
 }
 
-export default function ChartCandles({
-  className,
-}: CandleChartCandleProps) {
+export default function PriceGraph({ className }: PriceGraphProps) {
   const { data } = useChartData()
   const {
     candleWidth,

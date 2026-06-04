@@ -1,5 +1,5 @@
 import { createContext, Dispatch, ReactNode, useState } from "react"
-import { ChartCoords } from "./types"
+import { ChartCoords } from "../types"
 
 export const MouseCoordsContext = createContext<
   [ChartCoords, Dispatch<ChartCoords>]

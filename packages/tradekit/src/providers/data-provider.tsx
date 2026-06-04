@@ -12,13 +12,14 @@ import {
   dataReducer,
   DataState,
   setData,
-} from "./reducers/data-reducer"
-import { Candle } from "./types"
+} from "../reducers/data-reducer"
+import { Candle } from "../types"
 
 const initialState: DataState = {
   data: [],
   maxValue: 0,
   minValue: 0,
+  indicators: {},
 }
 
 export const DataContext = createContext<{

@@ -1,6 +1,6 @@
 import { ChartCoords, Dimensions } from "../types"
 import { useCallback, use, useMemo } from "react"
-import { DisplayContext } from "../display-provider"
+import { DisplayContext } from "../providers/display-provider"
 import useChartData from "./use-chart-data"
 
 export default function useChartDisplay() {
