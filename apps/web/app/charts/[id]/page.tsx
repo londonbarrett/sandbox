@@ -7,6 +7,7 @@ import {
   PriceGraph,
   Status,
   Symbol,
+  TradekitProvider,
   ValueAxis,
 } from "react-tradekit"
 
@@ -55,21 +56,30 @@ export default async function Page({
 
   return (
     <div className="flex h-full flex-col p-6">
-      <Chart data={fileData.map(extractor)} height="600" width="100%">
-        <Grid />
-        <Symbol symbol="BTC/USD" interval="1h" />
-        <EMAGraph period={200} />
-        <EMAGraph color="#34f56e" period={50} />
-        <PriceGraph />
-        <Crosshair />
-        <Status
-          showIndex
-          showIndicators
-          symbol="BTC/USD"
-          interval="1h"
-        />
-        <ValueAxis />
-      </Chart>
+      <TradekitProvider data={fileData.map(extractor)}>
+        <Chart height="500">
+          <Grid />
+          <Symbol symbol="BTC/USD" interval="1h" />
+          <PriceGraph />
+          <EMAGraph period={200} />
+          <EMAGraph color="#34f56e" period={50} />
+          <Crosshair />
+          <Status
+            showIndex
+            showIndicators
+            symbol="BTC/USD"
+            interval="1h"
+          />
+          <ValueAxis />
+        </Chart>
+        <Chart height={300}>
+          <EMAGraph period={10} />
+          <EMAGraph color="#34f56e" period={20} />
+          <EMAGraph color="#34f5fe" period={30} />
+          <Crosshair />
+          <ValueAxis />
+        </Chart>
+      </TradekitProvider>
     </div>
   )
 }

@@ -1,8 +1,8 @@
 "use client"
 
 import { useMemo } from "react"
-import useChartData from "../hooks/use-chart-data"
-import useMouseCoords from "../hooks/use-mouse-coords"
+import { useData } from "../hooks/use-data"
+import { useChart } from "../hooks/use-chart"
 import { getCurrencyFormatter } from "../util"
 
 export type StatusProps = {
@@ -17,15 +17,15 @@ function formatIndicatorKey(key: string): string {
   return key.toUpperCase()
 }
 
-export default function Status({
+export function Status({
   className,
   symbol,
   interval,
   showIndex = false,
   showIndicators = false,
 }: StatusProps) {
-  const { coords } = useMouseCoords()
-  const { indicators } = useChartData()
+  const { coords } = useChart()
+  const { indicators } = useData()
   const formatCurrency = getCurrencyFormatter
 
   const indicatorEntries = useMemo(() => {

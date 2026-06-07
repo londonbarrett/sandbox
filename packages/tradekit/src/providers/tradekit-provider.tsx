@@ -7,6 +7,7 @@ import {
   useEffect,
   useReducer,
 } from "react"
+import DisplayProvider from "../providers/display-provider"
 import {
   DataAction,
   dataReducer,
@@ -22,20 +23,20 @@ const initialState: DataState = {
   indicators: {},
 }
 
-export const DataContext = createContext<{
+export const TradekitContext = createContext<{
   state: DataState
   dispatch: Dispatch<DataAction>
 }>({ state: initialState, dispatch: () => {} })
 
-export type DataProviderProps = {
+export type TradekitProviderProps = {
   children: ReactNode
   data: Candle[]
 }
 
-export default function DataProvider({
+export function TradekitProvider({
   children,
   data,
-}: DataProviderProps) {
+}: TradekitProviderProps) {
   const [state, dispatch] = useReducer(dataReducer, initialState)
 
   useEffect(
@@ -46,6 +47,8 @@ export default function DataProvider({
   )
 
   return (
-    <DataContext value={{ state, dispatch }}>{children}</DataContext>
+    <TradekitContext value={{ state, dispatch }}>
+      <DisplayProvider>{children}</DisplayProvider>
+    </TradekitContext>
   )
 }

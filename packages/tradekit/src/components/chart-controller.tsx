@@ -1,5 +1,5 @@
-import useChartDisplay from "../hooks/use-chart-display"
-import useMouseCoords from "../hooks/use-mouse-coords"
+import { usePanel } from "../hooks/use-panel"
+import { useChart } from "../hooks/use-chart"
 import useMouseLock from "../hooks/use-mouse-lock"
 
 import {
@@ -11,24 +11,24 @@ import {
   useState,
 } from "react"
 
-type ChartSVGProps = {
+type ChartControllerProps = {
   children: ReactNode
   className?: string
-  height?: number | string
+  height: number | string
   ref: RefObject<SVGSVGElement | null>
-  width?: number | string
+  width: number | string
 }
 
-export default function ChartSVG({
+export function ChartController({
   children,
   className,
-  height = "100%",
+  height,
   ref,
-  width = "100%",
-}: ChartSVGProps) {
+  width,
+}: ChartControllerProps) {
   const { mouseLock, setMouseLock } = useMouseLock()
-  const { getCandleAt, pan, resize, zoom } = useChartDisplay()
-  const { coords, setCoords } = useMouseCoords()
+  const { getCandleAt, pan, zoom } = usePanel()
+  const { coords, resize, setCoords } = useChart()
 
   const mouseMoveHandler = useCallback(
     (event: MouseEvent<SVGSVGElement>) => {

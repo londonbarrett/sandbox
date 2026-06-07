@@ -7,7 +7,6 @@ export type DisplayState = {
   dataLength: number
   displayCandles: number
   graphWidth: number
-  height: number
   maxDisplayCandles: number
   maxOffsetX: number
   minDisplayCandles: number
@@ -18,11 +17,25 @@ export type DisplayState = {
   width: number
 }
 
+export const initialState: DisplayState = {
+  candleFactor: 0.8,
+  candleWidth: 0,
+  columnWidth: 0,
+  displayCandles: 100,
+  dataLength: 0,
+  graphWidth: 0,
+  maxDisplayCandles: 400,
+  minDisplayCandles: 50,
+  maxOffsetX: 0,
+  minOffsetX: 0,
+  offsetX: 0,
+  valueAxisWidth: 60,
+  viewportWidth: 0,
+  width: 0,
+}
+
 export type DisplayAction =
-  | PayloadAction<
-      "RESIZE",
-      { dataLength: number; height: number; width: number }
-    >
+  | PayloadAction<"RESIZE", { dataLength: number; width: number }>
   | PayloadAction<"PAN", number>
   | PayloadAction<"ZOOM", { delta: number; coords: ChartCoords }>
 
@@ -52,7 +65,6 @@ export const displayReducer = (
         columnWidth,
         dataLength: action.payload.dataLength,
         graphWidth,
-        height: action.payload.height,
         maxOffsetX,
         minOffsetX,
         offsetX: minOffsetX,

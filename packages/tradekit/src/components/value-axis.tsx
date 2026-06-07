@@ -1,8 +1,8 @@
 "use client"
 
 import { useMemo } from "react"
-import useChartDisplay from "../hooks/use-chart-display"
-import useMouseCoords from "../hooks/use-mouse-coords"
+import { usePanel } from "../hooks/use-panel"
+import { useChart } from "../hooks/use-chart"
 import {
   createLinearScale,
   getCurrencyFormatter,
@@ -14,19 +14,13 @@ export type ValueAxisProps = {
   pixelsPerTick?: number
 }
 
-export default function ValueAxis({
+export function ValueAxis({
   className,
   pixelsPerTick = 50,
 }: ValueAxisProps) {
-  const {
-    height,
-    valueAxisWidth,
-    viewportWidth,
-    getValueAt,
-    visibleMin,
-    visibleMax,
-  } = useChartDisplay()
-  const { coords } = useMouseCoords()
+  const { valueAxisWidth, viewportWidth, visibleMin, visibleMax } =
+    usePanel()
+  const { coords, getValueAt, height } = useChart()
   const formatCurrency = getCurrencyFormatter
 
   const ticks = useMemo(() => {

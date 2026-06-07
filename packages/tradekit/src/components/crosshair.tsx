@@ -1,16 +1,15 @@
 "use client"
 
-import useChartDisplay from "../hooks/use-chart-display"
-import useMouseCoords from "../hooks/use-mouse-coords"
+import { usePanel } from "../hooks/use-panel"
+import { useChart } from "../hooks/use-chart"
 
 export type CrosshairProps = {
   className?: string
 }
 
-export default function Crosshair({ className }: CrosshairProps) {
-  const { coords } = useMouseCoords()
-  const { columnWidth, height, viewportWidth, offsetX } =
-    useChartDisplay()
+export function Crosshair({ className }: CrosshairProps) {
+  const { coords, height } = useChart()
+  const { columnWidth, viewportWidth, offsetX } = usePanel()
 
   if (coords.x + coords.y === 0) {
     return null

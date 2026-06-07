@@ -1,12 +1,12 @@
 import { ChartCoords, Dimensions } from "../types"
 import { useCallback, use, useMemo } from "react"
 import { DisplayContext } from "../providers/display-provider"
-import useChartData from "./use-chart-data"
+import { useData } from "./use-data"
 
-export default function useChartDisplay() {
-  const { data, maxValue, minValue } = useChartData()
-  const { ref, state, dispatch } = use(DisplayContext)
-  const { offsetX, columnWidth, viewportWidth, height } = state
+export const usePanel = () => {
+  const { data, maxValue, minValue } = useData()
+  const { state, dispatch } = use(DisplayContext)
+  const { offsetX, columnWidth, viewportWidth } = state
 
   const { visibleMin, visibleMax } = useMemo(() => {
     if (data.length === 0 || columnWidth <= 0 || viewportWidth <= 0) {
@@ -55,46 +55,6 @@ export default function useChartDisplay() {
     [data, columnWidth, offsetX]
   )
 
-  const getValueAt = useCallback(
-    (y: number) => {
-      const value =
-        (Math.abs(y - height) / height) * (visibleMax - visibleMin) +
-        visibleMin
-      return value
-    },
-    [height, visibleMax, visibleMin]
-  )
-
-  const getXPosition = useCallback(
-    (clientX: number) =>
-      clientX -
-      Math.floor(ref.current?.getBoundingClientRect().left || 0),
-    [ref]
-  )
-
-  const getYCoord = useCallback(
-    (value: number) =>
-      ((value - visibleMin) / (visibleMax - visibleMin)) * height -
-      height,
-    [height, visibleMax, visibleMin]
-  )
-
-  const getAbsYCoord = useCallback(
-    (value: number) =>
-      Math.abs(
-        ((value - visibleMin) / (visibleMax - visibleMin)) * height -
-          height
-      ),
-    [height, visibleMax, visibleMin]
-  )
-
-  const getYPosition = useCallback(
-    (clientY: number) =>
-      clientY -
-      Math.floor(ref.current?.getBoundingClientRect().top || 0),
-    [ref]
-  )
-
   const pan = useCallback(
     (payload: number) =>
       dispatch({
@@ -106,18 +66,15 @@ export default function useChartDisplay() {
 
   const resize = useCallback(
     (dimensions: Dimensions) => {
-      if (data.length > 0) {
-        dispatch({
-          type: "RESIZE",
-          payload: {
-            dataLength: data.length,
-            height: dimensions.height,
-            width: dimensions.width,
-          },
-        })
-      }
+      dispatch({
+        type: "RESIZE",
+        payload: {
+          dataLength: data.length,
+          width: dimensions.width,
+        },
+      })
     },
-    [data, dispatch]
+    [data.length, dispatch]
   )
 
   const zoom = useCallback(
@@ -128,12 +85,7 @@ export default function useChartDisplay() {
   )
   return {
     ...state,
-    getAbsYCoord,
     getCandleAt,
-    getValueAt,
-    getXPosition,
-    getYCoord,
-    getYPosition,
     pan,
     resize,
     zoom,

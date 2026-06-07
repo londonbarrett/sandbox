@@ -1,15 +1,15 @@
 import { use, useCallback } from "react"
-import { DataContext } from "../providers/data-provider"
+import { TradekitContext } from "../providers/tradekit-provider"
 import { setIndicator as setIndicatorAction } from "../reducers/data-reducer"
 
-export default function useChartData() {
-  const { state, dispatch } = use(DataContext)
+export function useData() {
+  const { state, dispatch } = use(TradekitContext)
 
   const setIndicator = useCallback(
     (key: string, values: (number | null)[]) => {
       dispatch(setIndicatorAction(key, values))
     },
-    [dispatch],
+    [dispatch]
   )
 
   return {

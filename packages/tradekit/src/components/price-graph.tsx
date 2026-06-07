@@ -1,22 +1,19 @@
 "use client"
 
 import { useMemo } from "react"
-import useChartData from "../hooks/use-chart-data"
-import useChartDisplay from "../hooks/use-chart-display"
+import { useData } from "../hooks/use-data"
+import { usePanel } from "../hooks/use-panel"
+import { useChart } from "../hooks/use-chart"
 
 export type PriceGraphProps = {
   className?: string
 }
 
-export default function PriceGraph({ className }: PriceGraphProps) {
-  const { data } = useChartData()
-  const {
-    candleWidth,
-    columnWidth,
-    getAbsYCoord,
-    offsetX,
-    viewportWidth,
-  } = useChartDisplay()
+export function PriceGraph({ className }: PriceGraphProps) {
+  const { data } = useData()
+  const { candleWidth, columnWidth, offsetX, viewportWidth } =
+    usePanel()
+  const { getAbsYCoord } = useChart()
 
   const { bullishPath, bearishPath } = useMemo(() => {
     if (columnWidth <= 0 || viewportWidth <= 0 || data.length === 0) {

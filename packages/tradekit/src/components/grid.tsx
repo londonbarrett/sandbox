@@ -1,16 +1,18 @@
 "use client"
 
 import { useMemo } from "react"
-import useChartDisplay from "../hooks/use-chart-display"
+import { usePanel } from "../hooks/use-panel"
 import { createLinearScale, niceTicks } from "../util"
+import { useChart } from "../hooks/use-chart"
 
 export type GridProps = {
   className?: string
 }
 
-export default function Grid({ className }: GridProps) {
-  const { height, viewportWidth, visibleMin, visibleMax } =
-    useChartDisplay()
+export function Grid({ className }: GridProps) {
+  const { viewportWidth, visibleMin, visibleMax } = usePanel()
+  const { height } = useChart()
+
   const lines = useMemo(() => {
     const scale = createLinearScale(
       [visibleMax, visibleMin],

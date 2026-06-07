@@ -9,7 +9,10 @@ export type DataState = {
 
 export type DataAction =
   | PayloadAction<"SET_DATA", Candle[]>
-  | PayloadAction<"SET_INDICATOR", { key: string; values: (number | null)[] }>
+  | PayloadAction<
+      "SET_INDICATOR",
+      { key: string; values: (number | null)[] }
+    >
 
 export const dataReducer = (state: DataState, action: DataAction) => {
   switch (action.type) {

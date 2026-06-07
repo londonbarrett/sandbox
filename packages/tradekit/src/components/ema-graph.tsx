@@ -1,9 +1,10 @@
 "use client"
 
 import { useEffect, useMemo } from "react"
-import useChartData from "../hooks/use-chart-data"
-import useChartDisplay from "../hooks/use-chart-display"
+import { useData } from "../hooks/use-data"
+import { usePanel } from "../hooks/use-panel"
 import { ema } from "../calculations"
+import { useChart } from "../hooks/use-chart"
 
 export type EMAGraphProps = {
   className?: string
@@ -11,14 +12,14 @@ export type EMAGraphProps = {
   period: number
 }
 
-export default function EMAGraph({
+export function EMAGraph({
   className,
   color = "#f59e0b",
   period = 200,
 }: EMAGraphProps) {
-  const { data, setIndicator } = useChartData()
-  const { columnWidth, getAbsYCoord, offsetX, viewportWidth } =
-    useChartDisplay()
+  const { data, setIndicator } = useData()
+  const { columnWidth, offsetX, viewportWidth } = usePanel()
+  const { getAbsYCoord } = useChart()
 
   const closes = useMemo(() => data.map((c) => c.close), [data])
 

@@ -1,7 +1,6 @@
 "use client"
 
-import { memo } from "react"
-import useChatDisplay from "../hooks/use-chart-display"
+import { usePanel } from "../hooks/use-panel"
 
 export type SymbolProps = {
   className?: string
@@ -9,12 +8,8 @@ export type SymbolProps = {
   interval: string
 }
 
-export default memo(function Symbol({
-  className,
-  symbol,
-  interval,
-}: SymbolProps) {
-  const { valueAxisWidth } = useChatDisplay()
+export function Symbol({ className, symbol, interval }: SymbolProps) {
+  const { valueAxisWidth } = usePanel()
 
   return (
     <text
@@ -34,4 +29,4 @@ export default memo(function Symbol({
       {`${symbol} - ${interval}`}
     </text>
   )
-})
+}
