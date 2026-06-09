@@ -15,4 +15,4 @@ export { ValueAxis, type ValueAxisProps } from "./components/value-axis"
 export {
   TradekitProvider,
   type TradekitProviderProps,
-} from "./providers/tradekit-provider"
+} from "./components/tradekit-provider"

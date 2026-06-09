@@ -8,6 +8,7 @@ import {
   getCurrencyFormatter,
   niceTicks,
 } from "../util"
+import { useCoords } from "../hooks/use-coords"
 
 export type ValueAxisProps = {
   className?: string
@@ -20,7 +21,8 @@ export function ValueAxis({
 }: ValueAxisProps) {
   const { valueAxisWidth, viewportWidth, visibleMin, visibleMax } =
     usePanel()
-  const { coords, getValueAt, height } = useChart()
+  const { getValueAt, height, ref } = useChart()
+  const { activeChart, coords } = useCoords()
   const formatCurrency = getCurrencyFormatter
 
   const ticks = useMemo(() => {
@@ -55,31 +57,33 @@ export function ValueAxis({
       ))}
 
       {/* Legend */}
-      <g>
-        {coords.y > 0 && (
-          <>
-            <rect
-              style={{
-                fill: "var(--chart-label)",
-                opacity: 0.8,
-              }}
-              x={4}
-              y={coords.y - 8}
-              width={valueAxisWidth - 8}
-              height={16}
-              rx={2}
-            />
-            <text
-              style={{ fill: "var(--chart-bg)", fontSize: 9 }}
-              textAnchor="middle"
-              x={valueAxisWidth / 2}
-              y={coords.y + 3}
-            >
-              {formatCurrency(getValueAt(coords.y))}
-            </text>
-          </>
-        )}
-      </g>
+      {ref === activeChart && (
+        <g>
+          {coords.y > 0 && (
+            <>
+              <rect
+                style={{
+                  fill: "var(--chart-label)",
+                  opacity: 0.8,
+                }}
+                x={4}
+                y={coords.y - 8}
+                width={valueAxisWidth - 8}
+                height={16}
+                rx={2}
+              />
+              <text
+                style={{ fill: "var(--chart-bg)", fontSize: 9 }}
+                textAnchor="middle"
+                x={valueAxisWidth / 2}
+                y={coords.y + 3}
+              >
+                {formatCurrency(getValueAt(coords.y))}
+              </text>
+            </>
+          )}
+        </g>
+      )}
 
       <line
         style={{ stroke: "var(--chart-axis)", strokeWidth: 2 }}

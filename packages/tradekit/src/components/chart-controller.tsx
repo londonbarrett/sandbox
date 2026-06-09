@@ -1,7 +1,3 @@
-import { usePanel } from "../hooks/use-panel"
-import { useChart } from "../hooks/use-chart"
-import useMouseLock from "../hooks/use-mouse-lock"
-
 import {
   MouseEvent,
   ReactNode,
@@ -10,6 +6,10 @@ import {
   useEffect,
   useState,
 } from "react"
+import { useChart } from "../hooks/use-chart"
+import { useCoords } from "../hooks/use-coords"
+import useMouseLock from "../hooks/use-mouse-lock"
+import { usePanel } from "../hooks/use-panel"
 
 type ChartControllerProps = {
   children: ReactNode
@@ -28,7 +28,8 @@ export function ChartController({
 }: ChartControllerProps) {
   const { mouseLock, setMouseLock } = useMouseLock()
   const { getCandleAt, pan, zoom } = usePanel()
-  const { coords, resize, setCoords } = useChart()
+  const { resize } = useChart()
+  const { coords, setCoords } = useCoords()
 
   const mouseMoveHandler = useCallback(
     (event: MouseEvent<SVGSVGElement>) => {
@@ -37,7 +38,7 @@ export function ChartController({
         const x = event.clientX - rect.left
         const y = event.clientY - rect.top
         const candle = getCandleAt(x)
-        setCoords({ candle, x, y })
+        setCoords({ candle, x, y }, ref)
       }
     },
     [getCandleAt, ref]
@@ -90,19 +91,22 @@ export function ChartController({
     [ref, resize]
   )
 
-  useEffect(() => {
-    const container = ref.current
-    if (container) {
-      container.addEventListener("wheel", wheelHandler, {
-        passive: false,
-      })
-    }
-    return () => {
+  useEffect(
+    function wheelHandlerEffect() {
+      const container = ref.current
       if (container) {
-        container.removeEventListener("wheel", wheelHandler)
+        container.addEventListener("wheel", wheelHandler, {
+          passive: false,
+        })
       }
-    }
-  }, [ref, wheelHandler])
+      return () => {
+        if (container) {
+          container.removeEventListener("wheel", wheelHandler)
+        }
+      }
+    },
+    [ref, wheelHandler]
+  )
 
   return (
     <svg

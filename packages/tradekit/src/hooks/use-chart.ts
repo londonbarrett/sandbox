@@ -1,14 +1,14 @@
 import { use, useCallback } from "react"
-import { ChartContext } from "../providers/chart-provider"
+import { ChartContext } from "../components/chart"
+import { Dimensions } from "../types"
 import { usePanel } from "./use-panel"
-import { ChartCoords, Dimensions } from "../types"
 
 export const useChart = () => {
   const { visibleMax, visibleMin, resize: panelResize } = usePanel()
   const {
     dispatch,
     ref,
-    state: { coords, height },
+    state: { height },
   } = use(ChartContext)
 
   const getValueAt = useCallback(
@@ -21,19 +21,19 @@ export const useChart = () => {
     [height, visibleMax, visibleMin]
   )
 
-  const getYCoord = useCallback(
-    (value: number) =>
-      ((value - visibleMin) / (visibleMax - visibleMin)) * height -
-      height,
-    [height, visibleMax, visibleMin]
-  )
-
   const getAbsYCoord = useCallback(
     (value: number) =>
       Math.abs(
         ((value - visibleMin) / (visibleMax - visibleMin)) * height -
           height
       ),
+    [height, visibleMax, visibleMin]
+  )
+
+  const getYCoord = useCallback(
+    (value: number) =>
+      ((value - visibleMin) / (visibleMax - visibleMin)) * height -
+      height,
     [height, visibleMax, visibleMin]
   )
 
@@ -62,19 +62,11 @@ export const useChart = () => {
     [dispatch, panelResize]
   )
 
-  const setCoords = (coords: ChartCoords) => {
-    dispatch({
-      type: "SET_COORDS",
-      payload: coords,
-    })
-  }
-
   return {
-    coords,
     getAbsYCoord,
     getValueAt,
     height,
+    ref,
     resize,
-    setCoords,
   }
 }

@@ -1,5 +1,5 @@
 import { use, useCallback } from "react"
-import { TradekitContext } from "../providers/tradekit-provider"
+import { TradekitContext } from "../components/tradekit-provider"
 import { setIndicator as setIndicatorAction } from "../reducers/data-reducer"
 
 export function useData() {

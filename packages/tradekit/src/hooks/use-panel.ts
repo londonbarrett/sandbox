@@ -1,11 +1,11 @@
 import { ChartCoords, Dimensions } from "../types"
 import { useCallback, use, useMemo } from "react"
-import { DisplayContext } from "../providers/display-provider"
+import { PanelContext } from "../components/panel"
 import { useData } from "./use-data"
 
 export const usePanel = () => {
   const { data, maxValue, minValue } = useData()
-  const { state, dispatch } = use(DisplayContext)
+  const { state, dispatch } = use(PanelContext)
   const { offsetX, columnWidth, viewportWidth } = state
 
   const { visibleMin, visibleMax } = useMemo(() => {

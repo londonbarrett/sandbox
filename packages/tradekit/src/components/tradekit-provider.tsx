@@ -7,7 +7,6 @@ import {
   useEffect,
   useReducer,
 } from "react"
-import DisplayProvider from "../providers/display-provider"
 import {
   DataAction,
   dataReducer,
@@ -15,6 +14,7 @@ import {
   setData,
 } from "../reducers/data-reducer"
 import { Candle } from "../types"
+import Panel from "./panel"
 
 const initialState: DataState = {
   data: [],
@@ -48,7 +48,7 @@ export function TradekitProvider({
 
   return (
     <TradekitContext value={{ state, dispatch }}>
-      <DisplayProvider>{children}</DisplayProvider>
+      <Panel>{children}</Panel>
     </TradekitContext>
   )
 }

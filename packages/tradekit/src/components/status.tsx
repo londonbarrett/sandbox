@@ -1,8 +1,8 @@
 "use client"
 
 import { useMemo } from "react"
+import { useCoords } from "../hooks/use-coords"
 import { useData } from "../hooks/use-data"
-import { useChart } from "../hooks/use-chart"
 import { getCurrencyFormatter } from "../util"
 
 export type StatusProps = {
@@ -24,7 +24,7 @@ export function Status({
   showIndex = false,
   showIndicators = false,
 }: StatusProps) {
-  const { coords } = useChart()
+  const { coords } = useCoords()
   const { indicators } = useData()
   const formatCurrency = getCurrencyFormatter
 

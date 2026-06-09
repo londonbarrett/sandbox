@@ -1,6 +1,6 @@
 import { ChartCoords, PayloadAction } from "../types"
 
-export type DisplayState = {
+export type PanelState = {
   candleFactor: number
   candleWidth: number
   columnWidth: number
@@ -17,7 +17,7 @@ export type DisplayState = {
   width: number
 }
 
-export const initialState: DisplayState = {
+export const initialState: PanelState = {
   candleFactor: 0.8,
   candleWidth: 0,
   columnWidth: 0,
@@ -34,15 +34,15 @@ export const initialState: DisplayState = {
   width: 0,
 }
 
-export type DisplayAction =
+export type PanelAction =
   | PayloadAction<"RESIZE", { dataLength: number; width: number }>
   | PayloadAction<"PAN", number>
   | PayloadAction<"ZOOM", { delta: number; coords: ChartCoords }>
 
-export const displayReducer = (
-  state: DisplayState,
-  action: DisplayAction
-): DisplayState => {
+export const panelReducer = (
+  state: PanelState,
+  action: PanelAction
+): PanelState => {
   switch (action.type) {
     case "PAN": {
       const nextOffset =
