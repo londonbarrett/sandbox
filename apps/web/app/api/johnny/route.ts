@@ -1,31 +1,34 @@
-// app/api/cache/route.js
-import { ttlCache } from "@/lib/ttl-cache"
+import { getActiveEntries, setEntry } from "@/lib/cache/service"
 import { NextRequest, NextResponse } from "next/server"
 
-// GET: Returns all active keys in the cache
+type PostBody = {
+  key?: string
+  value?: unknown
+  ttl?: number
+}
+
 export async function GET() {
-  const activeItems = ttlCache.getAllActive()
+  const activeItems = getActiveEntries()
   return NextResponse.json(activeItems)
 }
 
-// POST: Adds a new item to the cache
 export async function POST(request: NextRequest) {
   try {
-    const { key, value, ttl } = await request.json()
+    const { key, value, ttl }: PostBody = await request.json()
 
-    if (!key || !value) {
+    if (key === undefined || value === undefined) {
       return NextResponse.json(
         { error: "Key and Value are required" },
         { status: 400 }
       )
     }
 
-    ttlCache.set(key, value, ttl)
+    setEntry(key, value, ttl)
     return NextResponse.json({
       success: true,
       message: `Key "${key}" cached.`,
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Invalid request body" },
       { status: 400 }
