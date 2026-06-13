@@ -1,8 +1,8 @@
 "use client"
 
 import { useMemo } from "react"
+import { useChart } from "../hooks/use-chart"
 import { useCoords } from "../hooks/use-coords"
-import { useData } from "../hooks/use-data"
 import { getCurrencyFormatter } from "../util"
 
 export type StatusProps = {
@@ -11,6 +11,7 @@ export type StatusProps = {
   interval: string
   showIndex?: boolean
   showIndicators?: boolean
+  showOHLCV?: boolean
 }
 
 function formatIndicatorKey(key: string): string {
@@ -23,20 +24,25 @@ export function Status({
   interval,
   showIndex = false,
   showIndicators = false,
+  showOHLCV,
 }: StatusProps) {
   const { coords } = useCoords()
-  const { indicators } = useData()
+  const { hasPriceGraph, indicators } = useChart()
   const formatCurrency = getCurrencyFormatter
+  const showOHLCVValue = showOHLCV ?? hasPriceGraph
+  const candle = coords.candle
 
   const indicatorEntries = useMemo(() => {
-    if (!showIndicators || !coords.candle) return []
+    if (!showIndicators) return []
 
     return Object.entries(indicators).flatMap(([key, values]) => {
-      const value = values[coords.candle!.index]
-      if (value === null || value === undefined) return []
+      const value = candle ? values[candle.index] : undefined
+      if (value === null || value === undefined) {
+        return [`${formatIndicatorKey(key)}: --`]
+      }
       return [`${formatIndicatorKey(key)}: ${formatCurrency(value)}`]
     })
-  }, [showIndicators, coords.candle, indicators, formatCurrency])
+  }, [showIndicators, candle, indicators, formatCurrency])
 
   return (
     <g
@@ -54,25 +60,26 @@ export function Status({
         {`${symbol} - ${interval}`}
       </text>
       <text style={{ fill: "var(--chart-label)", fontSize: 12 }} y={20}>
-        {coords.candle ? (
+        {showOHLCVValue && candle ? (
           <tspan
             style={{
               fill:
-                coords.candle.close >= coords.candle.open
+                candle.close >= candle.open
                   ? "var(--chart-bull)"
                   : "var(--chart-bear)",
             }}
           >
-            {showIndex && `i: ${coords.candle.index} `}O:{" "}
-            {formatCurrency(coords.candle.open)} H:{" "}
-            {formatCurrency(coords.candle.high)} L:{" "}
-            {formatCurrency(coords.candle.low)} C:{" "}
-            {formatCurrency(coords.candle.close)}
-            {indicatorEntries.length > 0 &&
-              ` ${indicatorEntries.join(" ")}`}
+            {showIndex && `i: ${candle.index} `}O:{" "}
+            {formatCurrency(candle.open)} H:{" "}
+            {formatCurrency(candle.high)} L:{" "}
+            {formatCurrency(candle.low)} C:{" "}
+            {formatCurrency(candle.close)}
           </tspan>
-        ) : (
+        ) : showOHLCVValue ? (
           <tspan>{showIndex && `i: -- O: -- H: -- L: -- C: --`}</tspan>
+        ) : null}
+        {indicatorEntries.length > 0 && (
+          <tspan>{showOHLCVValue ? " " : ""}{indicatorEntries.join(" ")}</tspan>
         )}
       </text>
     </g>

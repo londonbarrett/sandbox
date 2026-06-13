@@ -17,9 +17,9 @@ export function EMAGraph({
   color = "#f59e0b",
   period = 200,
 }: EMAGraphProps) {
-  const { data, setIndicator } = useData()
+  const { data } = useData()
   const { columnWidth, offsetX, viewportWidth } = usePanel()
-  const { getAbsYCoord } = useChart()
+  const { getAbsYCoord, setIndicator } = useChart()
 
   const closes = useMemo(() => data.map((c) => c.close), [data])
 

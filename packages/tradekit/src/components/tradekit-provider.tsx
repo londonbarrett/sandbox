@@ -20,7 +20,6 @@ const initialState: DataState = {
   data: [],
   maxValue: 0,
   minValue: 0,
-  indicators: {},
 }
 
 export const TradekitContext = createContext<{

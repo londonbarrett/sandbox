@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { useData } from "../hooks/use-data"
 import { usePanel } from "../hooks/use-panel"
 import { useChart } from "../hooks/use-chart"
@@ -13,7 +13,12 @@ export function PriceGraph({ className }: PriceGraphProps) {
   const { data } = useData()
   const { candleWidth, columnWidth, offsetX, viewportWidth } =
     usePanel()
-  const { getAbsYCoord } = useChart()
+  const { getAbsYCoord, setHasPriceGraph } = useChart()
+
+  useEffect(() => {
+    setHasPriceGraph(true)
+    return () => setHasPriceGraph(false)
+  }, [setHasPriceGraph])
 
   const { bullishPath, bearishPath } = useMemo(() => {
     if (columnWidth <= 0 || viewportWidth <= 0 || data.length === 0) {

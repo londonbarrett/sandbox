@@ -72,6 +72,7 @@ export function ChartDemo({ data }: ChartDemoProps) {
             <EMAGraph color="#34f5fe" period={30} />
             <Crosshair />
             <ValueAxis />
+            <Status showIndicators symbol="BTC/USD" interval="1h" />
           </Chart>
         </TradekitProvider>
       </div>
