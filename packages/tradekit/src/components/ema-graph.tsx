@@ -30,7 +30,7 @@ export function EMAGraph({
   }, [emaValues, period, setIndicator])
 
   const pathD = useMemo(() => {
-    if (columnWidth <= 0 || viewportWidth <= 0 || data.length === 0) {
+    if (columnWidth <= 0 || viewportWidth <= 0 || data?.length === 0) {
       return ""
     }
 

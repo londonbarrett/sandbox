@@ -29,15 +29,15 @@ export const GET = async (request: NextRequest) => {
 
   try {
     const file = fs.readFileSync(
-      path.resolve("./data/2000.json"),
+      path.resolve(`./data/${count}.json`),
       "utf-8"
     )
     const data = (await JSON.parse(file)) as OHLCV[]
     return NextResponse.json({
       data: data.slice(0, parseInt(count)),
     })
-  } catch (e) {
-    throw "File not found"
+  } catch {
+    throw "FUCK FILE"
   }
 }
 

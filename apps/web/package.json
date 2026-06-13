@@ -13,7 +13,6 @@
     "fetchbtc": "node ./components/charts/fetch-btc.ts"
   },
   "dependencies": {
-    "react-tradekit": "workspace:*",
     "@workspace/ui": "workspace:*",
     "ccxt": "^4.5.52",
     "clsx": "^2.1.1",
@@ -23,6 +22,8 @@
     "protobufjs": "^8.3.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-tradekit": "workspace:*",
+    "sonner": "^2.0.7",
     "zod": "^3.25.76"
   },
   "devDependencies": {

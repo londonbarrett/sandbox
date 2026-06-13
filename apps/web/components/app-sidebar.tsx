@@ -5,15 +5,9 @@ import {
   SidebarContent,
   SidebarRail,
 } from "@workspace/ui/components/sidebar"
-import {
-  BookOpen,
-  Bot,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
+import { BookOpen, Bot, Settings2, SquareTerminal } from "lucide-react"
 import * as React from "react"
 import MainNav from "./main-nav"
-import { url } from "node:inspector"
 
 // This is sample data.
 const data = {
@@ -24,8 +18,8 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Charts",
-          url: "charts",
+          title: "Tradekit",
+          url: "tradekit",
         },
         {
           title: "Starred",
@@ -36,7 +30,7 @@ const data = {
           url: "#",
         },
       ],
-      url: "#"
+      url: "#",
     },
     {
       title: "Pokemon",
@@ -55,7 +49,7 @@ const data = {
           url: "#",
         },
       ],
-      url: "#"
+      url: "#",
     },
     {
       title: "Next",
@@ -106,7 +100,9 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarContent>

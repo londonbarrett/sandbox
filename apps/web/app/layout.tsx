@@ -10,6 +10,7 @@ import "@workspace/ui/globals.css"
 import "react-tradekit/globals.css"
 import { cn } from "@workspace/ui/lib/utils"
 import { Geist_Mono, Oxanium } from "next/font/google"
+import { Toaster } from "@workspace/ui/components/sonner"
 
 const oxanium = Oxanium({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -48,6 +49,7 @@ export default function RootLayout({
             </SidebarProvider>
           </ThemeProvider>
         </TooltipProvider>
+        <Toaster />
       </body>
     </html>
   )
