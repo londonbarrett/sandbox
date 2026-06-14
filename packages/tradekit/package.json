@@ -30,7 +30,8 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./globals.css": "./src/globals.css"
+    "./globals.css": "./src/globals.css",
+    "./theme.css": "./src/theme.css"
   },
   "publishConfig": {
     "main": "./dist/index.js",
@@ -40,12 +41,14 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
       },
-      "./globals.css": "./src/globals.css"
+      "./globals.css": "./src/globals.css",
+      "./theme.css": "./src/theme.css"
     }
   },
   "files": [
     "dist",
-    "src/globals.css"
+    "src/globals.css",
+    "src/theme.css"
   ],
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

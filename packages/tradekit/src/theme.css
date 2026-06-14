@@ -1,0 +1,8 @@
+/* Consumer must @import this file in their Tailwind entry point (e.g. globals.css).
+   Registers tradekit CSS vars as Tailwind theme tokens so utilities like
+   text-chart-label and data-[direction=bull]:text-chart-bull generate CSS. */
+@theme inline {
+  --color-chart-label: var(--chart-label);
+  --color-chart-bull: var(--chart-bull);
+  --color-chart-bear: var(--chart-bear);
+}

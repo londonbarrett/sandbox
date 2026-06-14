@@ -1,6 +1,5 @@
 "use client"
 
-import { useMemo } from "react"
 import { useChart } from "../hooks/use-chart"
 import { useCoords } from "../hooks/use-coords"
 import { getCurrencyFormatter } from "../util"
@@ -12,6 +11,10 @@ export type StatusProps = {
   showIndex?: boolean
   showIndicators?: boolean
   showOHLCV?: boolean
+}
+
+function cn(...classes: (string | undefined | false | null)[]) {
+  return classes.filter(Boolean).join(" ")
 }
 
 function formatIndicatorKey(key: string): string {
@@ -32,56 +35,46 @@ export function Status({
   const showOHLCVValue = showOHLCV ?? hasPriceGraph
   const candle = coords.candle
 
-  const indicatorEntries = useMemo(() => {
-    if (!showIndicators) return []
-
-    return Object.entries(indicators).flatMap(([key, values]) => {
-      const value = candle ? values[candle.index] : undefined
-      if (value === null || value === undefined) {
-        return [`${formatIndicatorKey(key)}: --`]
-      }
-      return [`${formatIndicatorKey(key)}: ${formatCurrency(value)}`]
-    })
-  }, [showIndicators, candle, indicators, formatCurrency])
-
   return (
-    <g
-      className={className}
-      style={{ transform: "translate(16px, 40px)" }}
-    >
-      <text
-        style={{
-          fill: "var(--chart-label)",
-          fontSize: 14,
-          fontWeight: 700,
-        }}
-        y={0}
-      >
-        {`${symbol} - ${interval}`}
-      </text>
-      <text style={{ fill: "var(--chart-label)", fontSize: 12 }} y={20}>
-        {showOHLCVValue && candle ? (
-          <tspan
-            style={{
-              fill:
-                candle.close >= candle.open
-                  ? "var(--chart-bull)"
-                  : "var(--chart-bear)",
-            }}
-          >
-            {showIndex && `i: ${candle.index} `}O:{" "}
-            {formatCurrency(candle.open)} H:{" "}
-            {formatCurrency(candle.high)} L:{" "}
-            {formatCurrency(candle.low)} C:{" "}
-            {formatCurrency(candle.close)}
-          </tspan>
-        ) : showOHLCVValue ? (
-          <tspan>{showIndex && `i: -- O: -- H: -- L: -- C: --`}</tspan>
-        ) : null}
-        {indicatorEntries.length > 0 && (
-          <tspan>{showOHLCVValue ? " " : ""}{indicatorEntries.join(" ")}</tspan>
-        )}
-      </text>
+    <g className={cn(className)}>
+      <foreignObject x={0} y={0} width={600} height={200}>
+        <div className="p-4 font-mono text-xs text-chart-label flex flex-col g-2">
+          <div className="text-sm font-bold">
+            {symbol} - {interval}
+          </div>
+          {showOHLCVValue && (
+            <div
+              data-direction={
+                candle
+                  ? candle.close >= candle.open
+                    ? "bull"
+                    : "bear"
+                  : undefined
+              }
+              className="data-[direction=bull]:text-chart-bull data-[direction=bear]:text-chart-bear"
+            >
+              {showIndex && `i: ${candle ? candle.index : "--"} `}O:{" "}
+              {candle ? formatCurrency(candle.open) : "--"} H:{" "}
+              {candle ? formatCurrency(candle.high) : "--"} L:{" "}
+              {candle ? formatCurrency(candle.low) : "--"} C:{" "}
+              {candle ? formatCurrency(candle.close) : "--"}
+            </div>
+          )}
+          {showIndicators &&
+            Object.entries(indicators).map(([key, values]) => {
+              const value = candle ? values[candle.index] : undefined
+              const display =
+                value !== null && value !== undefined
+                  ? formatCurrency(value)
+                  : "--"
+              return (
+                <div key={key}>
+                  {formatIndicatorKey(key)}: {display}
+                </div>
+              )
+            })}
+        </div>
+      </foreignObject>
     </g>
   )
 }

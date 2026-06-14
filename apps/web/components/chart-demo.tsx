@@ -31,7 +31,7 @@ export type ChartDemoProps = {
 
 export function ChartDemo({ data }: ChartDemoProps) {
   const [candles, setCandles] = useState(data)
-  const [count, setCount] = useState<string | null>("300")
+  const [count, setCount] = useState<string | null>("2000")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,7 +59,6 @@ export function ChartDemo({ data }: ChartDemoProps) {
             <EMAGraph color="#34f56e" period={50} />
             <Crosshair />
             <Status
-              showIndex
               showIndicators
               symbol="BTC/USD"
               interval="1h"

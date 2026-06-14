@@ -1,11 +1,16 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+/* Required for react-tradekit: registers theme tokens so Tailwind generates
+   text-chart-label, data-[direction=bull]:text-chart-bull, etc. */
+@import "react-tradekit/theme.css";
 
 @custom-variant dark (&:is(.dark *));
 @source "../../../apps/**/*.{ts,tsx}";
 @source "../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
+/* Required for react-tradekit: scan its source so Tailwind discovers utility classes */
+@source "../../../tradekit/src/**/*.{ts,tsx}";
 
 @theme inline {
     --font-heading: var(--font-sans);
