@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo } from "react"
+import { cn } from "../lib/utils"
 import { useData } from "../hooks/use-data"
 import { usePanel } from "../hooks/use-panel"
 import { ema } from "../calculations"
@@ -64,14 +65,12 @@ export function EMAGraph({
   if (!pathD) return null
 
   return (
-    <g className={className}>
+    <g className={cn(className)}>
       <path
         d={pathD}
         fill="none"
-        style={{
-          stroke: color,
-          strokeWidth: 2,
-        }}
+        className="stroke-2"
+        style={{ stroke: color }}
       />
     </g>
   )

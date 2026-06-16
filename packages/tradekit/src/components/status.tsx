@@ -1,5 +1,6 @@
 "use client"
 
+import { cn } from "../lib/utils"
 import { useChart } from "../hooks/use-chart"
 import { useCoords } from "../hooks/use-coords"
 import { getCurrencyFormatter } from "../util"
@@ -11,10 +12,6 @@ export type StatusProps = {
   showIndex?: boolean
   showIndicators?: boolean
   showOHLCV?: boolean
-}
-
-function cn(...classes: (string | undefined | false | null)[]) {
-  return classes.filter(Boolean).join(" ")
 }
 
 function formatIndicatorKey(key: string): string {
@@ -38,7 +35,7 @@ export function Status({
   return (
     <g className={cn(className)}>
       <foreignObject x={0} y={0} width={600} height={200}>
-        <div className="p-4 font-mono text-xs text-chart-label flex flex-col g-2">
+        <div className="p-4 font-mono text-xs text-chart-label flex flex-col gap-2">
           <div className="text-sm font-bold">
             {symbol} - {interval}
           </div>

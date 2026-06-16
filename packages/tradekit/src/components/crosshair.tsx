@@ -1,5 +1,6 @@
 "use client"
 
+import { cn } from "../lib/utils"
 import { useChart } from "../hooks/use-chart"
 import { useCoords } from "../hooks/use-coords"
 import { usePanel } from "../hooks/use-panel"
@@ -29,13 +30,11 @@ export function Crosshair({ className }: CrosshairProps) {
     offsetXAdjustment
 
   return (
-    <g className={className}>
+    <g className={cn(className)}>
       {ref === activeChart && (
         <line
-          style={{
-            stroke: "var(--chart-crosshair)",
-            strokeDasharray: "3",
-          }}
+          className="stroke-chart-crosshair"
+          style={{ strokeDasharray: "3" }}
           x1={0}
           x2={viewportWidth}
           y1={coords.y}
@@ -43,10 +42,8 @@ export function Crosshair({ className }: CrosshairProps) {
         />
       )}
       <line
-        style={{
-          stroke: "var(--chart-crosshair)",
-          strokeDasharray: "3",
-        }}
+        className="stroke-chart-crosshair"
+        style={{ strokeDasharray: "3" }}
         x1={snappedPosition}
         x2={snappedPosition}
         y1={0}

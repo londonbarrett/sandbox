@@ -1,5 +1,6 @@
 "use client"
 
+import { cn } from "../lib/utils"
 import { usePanel } from "../hooks/use-panel"
 
 export type SymbolProps = {
@@ -13,18 +14,16 @@ export function Symbol({ className, symbol, interval }: SymbolProps) {
 
   return (
     <text
-      className={className}
-      style={{
-        fill: "var(--chart-watermark)",
-        fontSize: "clamp(1.5rem, 5vw, 4.5rem)",
-        fontWeight: 700,
-        userSelect: "none",
-      }}
+      className={cn(
+        className,
+        "fill-chart-watermark font-bold select-none",
+      )}
       textAnchor="middle"
       dominantBaseline="middle"
       transform={`translate(${-(valueAxisWidth / 2)}, 0)`}
       x="50%"
       y="50%"
+      style={{ fontSize: "clamp(1.5rem, 5vw, 4.5rem)" }}
     >
       {`${symbol} - ${interval}`}
     </text>

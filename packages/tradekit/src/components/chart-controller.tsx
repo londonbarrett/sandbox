@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from "react"
+import { cn } from "../lib/utils"
 import { useChart } from "../hooks/use-chart"
 import { useCoords } from "../hooks/use-coords"
 import useMouseLock from "../hooks/use-mouse-lock"
@@ -110,12 +111,11 @@ export function ChartController({
 
   return (
     <svg
-      className={className}
+      className={cn(className, "bg-chart-bg border border-b-chart-grid")}
       height={height}
       onMouseMove={mouseMoveHandler}
       ref={ref}
       shapeRendering="crispEdges"
-      style={{ backgroundColor: "var(--chart-bg)" }}
       width={width}
     >
       {children}

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo } from "react"
+import { cn } from "../lib/utils"
 import { useData } from "../hooks/use-data"
 import { usePanel } from "../hooks/use-panel"
 import { useChart } from "../hooks/use-chart"
@@ -77,26 +78,18 @@ export function PriceGraph({ className }: PriceGraphProps) {
   ])
 
   return (
-    <g className={className}>
+    <g className={cn(className)}>
       {bullishPath && (
         <path
           d={bullishPath}
-          style={{
-            fill: "var(--chart-bull)",
-            stroke: "var(--chart-bull-stroke)",
-            strokeWidth: 1,
-          }}
+          className="fill-chart-bull stroke-chart-bull-stroke stroke-1"
         />
       )}
 
       {bearishPath && (
         <path
           d={bearishPath}
-          style={{
-            fill: "var(--chart-bear)",
-            stroke: "var(--chart-bear-stroke)",
-            strokeWidth: 1,
-          }}
+          className="fill-chart-bear stroke-chart-bear-stroke stroke-1"
         />
       )}
     </g>

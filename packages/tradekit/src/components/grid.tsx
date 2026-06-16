@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo } from "react"
+import { cn } from "../lib/utils"
 import { usePanel } from "../hooks/use-panel"
 import { createLinearScale, niceTicks } from "../util"
 import { useChart } from "../hooks/use-chart"
@@ -33,11 +34,11 @@ export function Grid({ className }: GridProps) {
   }, [height, visibleMin, visibleMax])
 
   return (
-    <g className={className}>
+    <g className={cn(className)}>
       {lines.map(({ offset, key }) => (
         <line
           key={key}
-          style={{ stroke: "var(--chart-grid)" }}
+          className="stroke-chart-grid"
           x1={0}
           x2={viewportWidth}
           y1={offset}

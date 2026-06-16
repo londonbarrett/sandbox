@@ -4,5 +4,12 @@
 @theme inline {
   --color-chart-label: var(--chart-label);
   --color-chart-bull: var(--chart-bull);
+  --color-chart-bull-stroke: var(--chart-bull-stroke);
   --color-chart-bear: var(--chart-bear);
+  --color-chart-bear-stroke: var(--chart-bear-stroke);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-crosshair: var(--chart-crosshair);
+  --color-chart-axis: var(--chart-axis);
+  --color-chart-bg: var(--chart-bg);
+  --color-chart-watermark: var(--chart-watermark);
 }

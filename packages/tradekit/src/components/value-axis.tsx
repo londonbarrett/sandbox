@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo } from "react"
+import { cn } from "../lib/utils"
 import { usePanel } from "../hooks/use-panel"
 import { useChart } from "../hooks/use-chart"
 import {
@@ -43,11 +44,11 @@ export function ValueAxis({
   }, [height, visibleMin, visibleMax, pixelsPerTick])
 
   return (
-    <g className={className} transform={`translate(${viewportWidth})`}>
+    <g className={cn(className)} transform={`translate(${viewportWidth})`}>
       {ticks.map(({ value, offset }) => (
         <text
           key={value}
-          style={{ fill: "var(--chart-label)", fontSize: 9 }}
+          className="fill-chart-label text-[9px]"
           textAnchor="middle"
           x={valueAxisWidth / 2}
           y={offset + 3}
@@ -62,10 +63,7 @@ export function ValueAxis({
           {coords.y > 0 && (
             <>
               <rect
-                style={{
-                  fill: "var(--chart-label)",
-                  opacity: 0.8,
-                }}
+                className="fill-chart-label opacity-80"
                 x={4}
                 y={coords.y - 8}
                 width={valueAxisWidth - 8}
@@ -73,7 +71,7 @@ export function ValueAxis({
                 rx={2}
               />
               <text
-                style={{ fill: "var(--chart-bg)", fontSize: 9 }}
+                className="fill-chart-bg text-[9px]"
                 textAnchor="middle"
                 x={valueAxisWidth / 2}
                 y={coords.y + 3}
@@ -86,7 +84,7 @@ export function ValueAxis({
       )}
 
       <line
-        style={{ stroke: "var(--chart-axis)", strokeWidth: 2 }}
+        className="stroke-chart-axis stroke-1"
         x1={0}
         x2={0}
         y1={0}
